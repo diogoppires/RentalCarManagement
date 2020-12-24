@@ -27,6 +27,7 @@ obj/
 TestResults/
 TP_PWEB/TP_PWEB/Migrations/
 TP_PWEB/TP_PWEB/App_Data/
+TP_PWEB/TP_PWEB/TP_PWEB.csproj
 
 ###################
 # Web publish log #
