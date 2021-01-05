@@ -223,6 +223,8 @@ namespace TP_PWEB
             foreach(var employee in deletedEmployes)
             {
                 db.Users.Remove(employee.idUser);
+                db.Employees.Remove(employee);
+                db.SaveChanges();
             }
         }
 
@@ -247,11 +249,15 @@ namespace TP_PWEB
                     return HttpNotFound();
                 }
 
-                if (verifyLastUser(user) == 1)
+                var isBusiness = db.AdminBusinesses.Select(s => s.idUser.Id).Contains(user.Id);
+                if (isBusiness)
                 {
-                    deleteEmployeesAccounts(user);
-                    db.Companies.Remove(getCompany(user));
-                    db.SaveChanges();
+                    if (verifyLastUser(user) == 1)
+                    {
+                        deleteEmployeesAccounts(user);
+                        db.Companies.Remove(getCompany(user));
+                        db.SaveChanges();
+                    }
                 }
                 var result = await UserManager.DeleteAsync(user);
                 if (!result.Succeeded)

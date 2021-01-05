@@ -1,17 +1,10 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Vehicle>
 
 @{
-    if (User.IsInRole("Business"))
-    {
-        <h2>My Vehicles</h2>
-        ViewBag.Title = "My Vehicles";
-    }
-    else
-    {
-        <h2>Catalog</h2>
-        ViewBag.Title = "Catalog";
-    }
+    ViewBag.Title = "Index";
 }
+
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -19,17 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Company.Name)
+            @Html.DisplayNameFor(model => model.Category.Name)
         </th>
-
         <th>
             @Html.DisplayNameFor(model => model.Brand)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Model)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.NumberKm)
@@ -48,37 +37,37 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberKm)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleTank)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Damages)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
-                @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
-            </td>
-        </tr>
+        if (item.Category.isVisible)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberKm)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleTank)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Damages)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
+                </td>
+            </tr>
+        }
     }
 
 </table>

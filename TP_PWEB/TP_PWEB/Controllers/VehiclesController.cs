@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -6,46 +7,19 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using TP_PWEB.Models;
 
-namespace TP_PWEB.Controllers
+namespace TP_PWEB.Views.Vehicles
 {
     public class VehiclesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        //Will return the IDCompany of the account that is
-        //logged at the moment.
-        //private Company thisAccountCompany()
-        //{
-        //    var userFound = User.Identity.GetUserId();
-        //    var companiesList = db.Companies.ToList();
-        //    return companiesList.Find(s => s.User.Id == userFound);
-        //}
-
-        private Company getCompany(string currentUserId)
-        {
-            return db.AdminBusinesses.Where(s => s.idUser.Id == currentUserId).Select(s => s.idCompany).First();
-        }
-
         // GET: Vehicles
         public ActionResult Index()
         {
-            if (User.IsInRole("Business"))
-            {
-                var vehiclesList = db.Vehicles.ToList();
-                var list = vehiclesList.Where(s => s.Company == getCompany(User.Identity.GetUserId())).ToList();
-                return View(list);
-            }
-            return View(db.Vehicles.ToList());
-        }
-
-        public ActionResult IndexCategories()
-        {
-            var vehiclesList = db.Vehicles.ToHashSet();
-            var list = vehiclesList.Select(s => s.Category);
-            return View(list.ToHashSet());
+            var vehicles = db.Vehicles.Include(v => v.Category);
+            return View(vehicles.ToList());
         }
 
         // GET: Vehicles/Details/5
@@ -63,9 +37,15 @@ namespace TP_PWEB.Controllers
             return View(vehicle);
         }
 
+        private Company getCompany(string currentUserId)
+        {
+            return db.AdminBusinesses.Where(s => s.idUser.Id == currentUserId).Select(s => s.idCompany).First();
+        }
+
         // GET: Vehicles/Create
         public ActionResult Create()
         {
+            ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
             return View();
         }
 
@@ -74,19 +54,17 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IDVehicle, Brand, Model, Category, NumberKm, VehicleTank, Damages, Price")] Vehicle vehicle)
+        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price,idCategory")] Vehicle vehicle)
         {
             if (ModelState.IsValid)
             {
-                if (User.Identity.IsAuthenticated)
-                {
-                    vehicle.Company = getCompany(User.Identity.GetUserId());
-                    db.Vehicles.Add(vehicle);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
+                vehicle.Company = getCompany(User.Identity.GetUserId());
+                db.Vehicles.Add(vehicle);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
 
+            ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
             return View(vehicle);
         }
 
@@ -102,6 +80,7 @@ namespace TP_PWEB.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
             return View(vehicle);
         }
 
@@ -110,7 +89,7 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IDVehicle,IDCompany,Brand,Model,Category,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle)
+        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price,idCategory")] Vehicle vehicle)
         {
             if (ModelState.IsValid)
             {
@@ -118,6 +97,7 @@ namespace TP_PWEB.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
             return View(vehicle);
         }
 

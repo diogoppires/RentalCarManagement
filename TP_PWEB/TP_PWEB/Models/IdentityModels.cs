@@ -30,6 +30,7 @@ namespace TP_PWEB.Models
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<AdminBusiness> AdminBusinesses { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public static ApplicationDbContext Create()
         {
