@@ -1,0 +1,26 @@
+﻿@model TP_PWEB.Models.Verification
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Verification</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.VerificationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VerificationName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IDVerifications }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

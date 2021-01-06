@@ -1,0 +1,34 @@
+﻿@model TP_PWEB.Models.Vehicle_Verification
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Vehicle_Verification</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Vehicle.Brand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vehicle.Brand)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDVerification)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDVerification)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IDVehicle_Verification }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -46,7 +46,10 @@ namespace TP_PWEB.Views.Vehicles
         public ActionResult Create()
         {
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
-            return View();
+            var tempModel = new VehicleAndVerifications();
+            tempModel.ListOfVerifications = db.Verifications.ToList();
+            tempModel.ChoosenVerifications = new bool[tempModel.ListOfVerifications.Count()];
+            return View(tempModel);
         }
 
         // POST: Vehicles/Create
@@ -54,11 +57,12 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price,idCategory")] Vehicle vehicle)
+        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, int idCategory, VehicleAndVerifications tempModel)
         {
             if (ModelState.IsValid)
             {
                 vehicle.Company = getCompany(User.Identity.GetUserId());
+                vehicle.idCategory = idCategory;
                 db.Vehicles.Add(vehicle);
                 db.SaveChanges();
                 return RedirectToAction("Index");

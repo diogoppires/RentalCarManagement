@@ -31,6 +31,8 @@ namespace TP_PWEB.Models
         public DbSet<Company> Companies { get; set; }
         public DbSet<AdminBusiness> AdminBusinesses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Verification> Verifications { get; set; }
+        public DbSet<Vehicle_Verification> Vehicles_Verifications { get; set; }
 
         public static ApplicationDbContext Create()
         {

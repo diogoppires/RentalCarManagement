@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TP_PWEB.Models.Vehicle_Verification>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Vehicle.Brand)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IDVerification)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vehicle.Brand)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IDVerification)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IDVehicle_Verification }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IDVehicle_Verification }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IDVehicle_Verification })
+        </td>
+    </tr>
+}
+
+</table>
