@@ -15,7 +15,7 @@
                     @Html.ActionLink("[BUSINESS] Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
                 </li>
             }
-            else if (User.IsInRole("Clients"))
+            else if (User.IsInRole("Client"))
             {
                 <li>
                     @Html.ActionLink("[CLIENT] Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
