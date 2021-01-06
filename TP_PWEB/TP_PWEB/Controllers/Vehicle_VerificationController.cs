@@ -15,10 +15,16 @@ namespace TP_PWEB.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Vehicle_Verification
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            var vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle);
-            return View(vehicles_Verifications.ToList());
+            IEnumerable<Vehicle_Verification> vehicles_Verification;
+            if (id != null)
+            {
+                vehicles_Verification = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == id);
+                return View(vehicles_Verification.ToList());
+            }
+            vehicles_Verification = db.Vehicles_Verifications.Include(v => v.Vehicle);
+            return View(vehicles_Verification.ToList());
         }
 
         // GET: Vehicle_Verification/Details/5

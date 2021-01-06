@@ -61,13 +61,31 @@ namespace TP_PWEB.Views.Vehicles
         {
             if (ModelState.IsValid)
             {
+                //Add Verifications
+                var allVerifications = db.Verifications.ToList();
+                for(int i = 0; i < tempModel.ChoosenVerifications.Count(); i++)
+                {
+                    if(tempModel.ChoosenVerifications[i] == true)
+                    {
+                        Vehicle_Verification vv = new Vehicle_Verification();
+                        vv.IDVehicle = vehicle.IDVehicle;
+                        vv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
+                        vv.Vehicle = vehicle;
+                        vv.Verification = allVerifications.ElementAt(i);
+                        db.Vehicles_Verifications.Add(vv);
+                    }
+                }
+
+                //Add Company
                 vehicle.Company = getCompany(User.Identity.GetUserId());
+                //Add Category
                 vehicle.idCategory = idCategory;
+                //Add Vehicle to database
                 db.Vehicles.Add(vehicle);
+                //Save changes
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
             return View(vehicle);
         }

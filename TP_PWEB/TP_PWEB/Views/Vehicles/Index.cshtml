@@ -65,7 +65,7 @@
                     @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
                     @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
                     @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle }) |
-                    @Html.ActionLink("Verification List", "Index", "Vehicle_Verification")
+                    @Html.ActionLink("Verification List", "Index", "Vehicle_Verification", new { id = item.IDVehicle }, null)
                 </td>
             </tr>
         }
