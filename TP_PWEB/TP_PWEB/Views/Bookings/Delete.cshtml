@@ -1,0 +1,40 @@
+﻿@model TP_PWEB.Models.Booking
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Booking</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.bookingInit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bookingInit)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bookingEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bookingEnd)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

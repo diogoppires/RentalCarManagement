@@ -12,6 +12,9 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.IDVehicle)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Category.Name)
         </th>
         <th>
@@ -40,6 +43,9 @@
         if (item.Category.isVisible)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IDVehicle)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
@@ -81,7 +87,7 @@
                     @{
                         if (User.IsInRole("Client"))
                         {
-                            @Html.ActionLink("Book this vehicle", "Index", "Vehicle", null, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                            @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default"})
                         }
                     }
 

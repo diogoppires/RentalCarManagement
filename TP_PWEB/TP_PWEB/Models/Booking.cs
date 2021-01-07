@@ -10,7 +10,13 @@ namespace TP_PWEB.Models
     {
         [Key]
         public int idBooking { get; set; }
+        [Display(Name = "Initial Date Booking")]
+        [DataType(DataType.Date)]
         public DateTime bookingInit { get; set; }
+
+
+        [Display(Name = "Final Date Booking")]
+        [DataType(DataType.Date)]
         public DateTime bookingEnd { get; set; }
         public virtual Vehicle vehicle { get; set; }
     }
