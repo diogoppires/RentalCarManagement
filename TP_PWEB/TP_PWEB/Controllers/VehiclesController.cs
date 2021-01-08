@@ -16,9 +16,31 @@ namespace TP_PWEB.Views.Vehicles
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Vehicles
-        public ActionResult Index()
+        public ActionResult Index(DateTime? bookingDate)
         {
             var vehicles = db.Vehicles.Include(v => v.Category);
+            if(bookingDate != null)
+            {
+                ViewBag.bookingDateSaved = bookingDate.Value.ToString("dd/MM/yyyy");
+                var listOfBookings = db.Bookings.Where(b => (DateTime.Compare(bookingDate.Value, b.bookingInit) >= 0) &&
+                                                            (DateTime.Compare(bookingDate.Value, b.bookingEnd) <= 0));
+
+                IEnumerable<Vehicle> availableVehicles = Enumerable.Empty<Vehicle>();
+                if(listOfBookings.Count() != 0)
+                {
+                    foreach (Booking b in listOfBookings)
+                    {
+                        availableVehicles = db.Vehicles.Where(av => av.IDVehicle != b.vehicle.IDVehicle);
+                    }
+                }
+                else
+                {
+                    availableVehicles = db.Vehicles;
+                }
+                
+                ModelState.Clear();
+                return View(availableVehicles.ToList());
+            }
             return View(vehicles.ToList());
         }
 

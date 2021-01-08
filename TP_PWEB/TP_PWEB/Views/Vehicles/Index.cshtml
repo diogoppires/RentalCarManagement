@@ -5,10 +5,28 @@
 }
 
 <h2>Index</h2>
-
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        Booking Date: @Html.TextBox("bookingDate", null, new { @class = "datepicker", @readonly = "readonly" })
+        <input type="submit" value="Search" />
+        <input type="reset" value="Clear Date" />
+    </p>
+}
+
+@{
+    if (ViewBag.bookingDateSaved != null)
+    {
+        <p>
+            Booking Date searched previously: @ViewBag.bookingDateSaved
+        </p>
+    }
+}
+
 <table class="table">
     <tr>
         <th>
@@ -81,13 +99,13 @@
                         </td>
                     }
                 }
-                
+
 
                 <td>
                     @{
                         if (User.IsInRole("Client"))
                         {
-                            @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default"})
+                            @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
                         }
                     }
 
@@ -96,3 +114,15 @@
         }
     }
 </table>
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy"
+            });
+        });
+    </script>
+}
