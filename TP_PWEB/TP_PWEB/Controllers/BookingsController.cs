@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -15,8 +16,13 @@ namespace TP_PWEB.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Bookings
-        public ActionResult Index()
+        public ActionResult Index(string userName)
         {
+            if (!String.IsNullOrEmpty(userName))
+            {
+                var userBookings = db.Bookings.Where(b => b.User.UserName.Equals(userName));
+                return View(userBookings.ToList());
+            }
             return View(db.Bookings.ToList());
         }
 
@@ -39,7 +45,6 @@ namespace TP_PWEB.Controllers
         public ActionResult Create()
         {
             Booking b = new Booking();
-            
             return View();
         }
 
@@ -52,12 +57,14 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userID = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.Where(u => u.Id == userID).First();
+                booking.User = currentUser;
                 booking.vehicle = db.Vehicles.Find(id);
                 db.Bookings.Add(booking);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Vehicles");
             }
-
             return View(booking);
         }
 

@@ -19,5 +19,6 @@ namespace TP_PWEB.Models
         [DataType(DataType.Date)]
         public DateTime bookingEnd { get; set; }
         public virtual Vehicle vehicle { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

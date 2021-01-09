@@ -12,18 +12,25 @@
 @using (Html.BeginForm())
 {
     <p>
-        Booking Date: @Html.TextBox("bookingDate", null, new { @class = "datepicker", @readonly = "readonly" })
+        Initial Date: @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
+        Ending Date: @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
         <input type="submit" value="Search" />
-        <input type="reset" value="Clear Date" />
+        <input type="reset" value="Clear Dates" />
     </p>
 }
 
 @{
-    if (ViewBag.bookingDateSaved != null)
+    if (!ViewBag.invalidDates)
     {
-        <p>
-            Booking Date searched previously: @ViewBag.bookingDateSaved
+        <p style="font-weight:bold">
+            Available vehicles from @ViewBag.initDateSaved to @ViewBag.endDateSaved
         </p>
+    }
+    else
+    {
+       <p style="color:red;font-weight:bold">
+           Invalid Dates!
+       </p>
     }
 }
 
@@ -121,7 +128,8 @@
     <script>
         $(function () {
             $(".datepicker").datepicker({
-                dateFormat: "dd/mm/yy"
+                dateFormat: "dd/mm/yy",
+                minDate: new Date(),
             });
         });
     </script>
