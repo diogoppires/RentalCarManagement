@@ -41,11 +41,26 @@ namespace TP_PWEB.Controllers
             return View(booking);
         }
 
-        // GET: Bookings/Create
-        public ActionResult Create()
+        private HashSet<Booking> getFilteredBookings(DateTime initDate, DateTime endDate)
         {
-            Booking b = new Booking();
-            return View();
+            var filteredBookingsInit = db.Bookings.Where(b => ((DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)));
+            var filteredBookingsEnd = db.Bookings.Where(b => ((DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)));
+            var filteredBookings = filteredBookingsInit.Concat(filteredBookingsEnd).ToList();
+            var uniqueBookings = new HashSet<Booking>(filteredBookings);
+            return uniqueBookings;
+        }
+        private bool verifyBooking(Booking booking)
+        {
+            var all = getFilteredBookings(booking.bookingInit, booking.bookingEnd);
+            return all.Count() == 0;
+        }
+
+        // GET: Bookings/Create
+        public ActionResult Create(int? id)
+        {
+            BookingsAndList bal = new BookingsAndList();
+            bal.listBookings = db.Bookings.Where(b => b.vehicle.IDVehicle == id).ToList();
+            return View(bal);
         }
 
         // POST: Bookings/Create
@@ -55,15 +70,24 @@ namespace TP_PWEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Booking booking, int? id)
         {
+            ViewBag.validBooking = false;
             if (ModelState.IsValid)
             {
-                var userID = User.Identity.GetUserId();
-                ApplicationUser currentUser = db.Users.Where(u => u.Id == userID).First();
-                booking.User = currentUser;
-                booking.vehicle = db.Vehicles.Find(id);
-                db.Bookings.Add(booking);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Vehicles");
+                if (verifyBooking(booking))
+                {
+                    ViewBag.validBooking = true;
+                    var userID = User.Identity.GetUserId();
+                    ApplicationUser currentUser = db.Users.Where(u => u.Id == userID).First();
+                    booking.User = currentUser;
+                    booking.vehicle = db.Vehicles.Find(id);
+                    db.Bookings.Add(booking);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Vehicles");
+                }
+                ModelState.Clear();
+                BookingsAndList bal = new BookingsAndList();
+                bal.listBookings = db.Bookings.Where(b => b.vehicle.IDVehicle == id).ToList();
+                return View(bal);
             }
             return View(booking);
         }
@@ -94,7 +118,7 @@ namespace TP_PWEB.Controllers
             {
                 db.Entry(booking).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Bookings", new { userName = User.Identity.Name });
             }
             return View(booking);
         }
@@ -122,7 +146,7 @@ namespace TP_PWEB.Controllers
             Booking booking = db.Bookings.Find(id);
             db.Bookings.Remove(booking);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Bookings", new { userName = User.Identity.Name });
         }
 
         protected override void Dispose(bool disposing)
