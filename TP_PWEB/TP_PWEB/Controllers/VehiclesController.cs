@@ -15,10 +15,48 @@ namespace TP_PWEB.Views.Vehicles
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Vehicles
-        public ActionResult Index()
+        private HashSet<Booking> getFilteredBookings(DateTime initDate, DateTime endDate)
         {
+            var filteredBookingsInit = db.Bookings.Where(b => ((DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)));
+            var filteredBookingsEnd = db.Bookings.Where(b => ((DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)));
+            var filteredBookings = filteredBookingsInit.Concat(filteredBookingsEnd).ToList();
+            var uniqueBookings = new HashSet<Booking>(filteredBookings);
+            return uniqueBookings;
+        }
+
+        // GET: Vehicles
+        public ActionResult Index(DateTime? initDate, DateTime? endDate)
+        {
+            ViewBag.InvalidDates = false;
             var vehicles = db.Vehicles.Include(v => v.Category);
+            if(initDate != null && endDate != null)
+            {
+                if (DateTime.Compare(initDate.Value, endDate.Value) > 0)
+                {
+                    ViewBag.InvalidDates = true;
+                    ModelState.Clear();
+                    return View(vehicles.ToList());
+                }
+                
+                ViewBag.InitDateSaved = initDate.Value.ToString("dd/MM/yyyy");
+                ViewBag.EndDateSaved = endDate.Value.ToString("dd/MM/yyyy");
+
+                var listOfBookings = getFilteredBookings(initDate.Value, endDate.Value); 
+                IEnumerable<Vehicle> availableVehicles = Enumerable.Empty<Vehicle>();
+                if(listOfBookings.Count() != 0)
+                {
+                    foreach (var b in listOfBookings)
+                    {
+                        availableVehicles = db.Vehicles.Where(av => av.IDVehicle != b.vehicle.IDVehicle);
+                    }
+                }
+                else
+                {
+                    availableVehicles = db.Vehicles;
+                }
+                ModelState.Clear();
+                return View(availableVehicles.ToList());
+            }
             return View(vehicles.ToList());
         }
 

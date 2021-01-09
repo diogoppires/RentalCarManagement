@@ -5,12 +5,40 @@
 }
 
 <h2>Index</h2>
-
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        Initial Date: @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
+        Ending Date: @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
+        <input type="submit" value="Search" />
+        <input type="reset" value="Clear Dates" />
+    </p>
+}
+
+@{
+    if (!ViewBag.invalidDates)
+    {
+        <p style="font-weight:bold">
+            Available vehicles from @ViewBag.initDateSaved to @ViewBag.endDateSaved
+        </p>
+    }
+    else
+    {
+       <p style="color:red;font-weight:bold">
+           Invalid Dates!
+       </p>
+    }
+}
+
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IDVehicle)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Category.Name)
         </th>
@@ -40,6 +68,9 @@
         if (item.Category.isVisible)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IDVehicle)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
@@ -75,13 +106,13 @@
                         </td>
                     }
                 }
-                
+
 
                 <td>
                     @{
                         if (User.IsInRole("Client"))
                         {
-                            @Html.ActionLink("Book this vehicle", "Index", "Vehicle", null, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                            @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
                         }
                     }
 
@@ -90,3 +121,16 @@
         }
     }
 </table>
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy",
+                minDate: new Date(),
+            });
+        });
+    </script>
+}

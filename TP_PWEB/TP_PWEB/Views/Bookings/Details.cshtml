@@ -1,0 +1,34 @@
+﻿@model TP_PWEB.Models.Booking
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Booking</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.bookingInit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bookingInit)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bookingEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bookingEnd)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idBooking }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
