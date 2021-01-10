@@ -39,5 +39,7 @@ namespace TP_PWEB.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<TP_PWEB.Models.Categories_Verification> Categories_Verification { get; set; }
     }
 }

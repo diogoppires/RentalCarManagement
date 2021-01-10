@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TP_PWEB.Models.Categories_Verification>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IDCategories_Verification }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IDCategories_Verification }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IDCategories_Verification })
+        </td>
+    </tr>
+}
+
+</table>

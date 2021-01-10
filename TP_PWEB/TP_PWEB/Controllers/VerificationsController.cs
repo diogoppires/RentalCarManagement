@@ -58,6 +58,27 @@ namespace TP_PWEB.Controllers
             return View(verification);
         }
 
+        public ActionResult Create_Outside()
+        {
+            return View();
+        }
+
+        // POST: Verifications/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Verifications.Add(verification);
+                db.SaveChanges();
+                return RedirectToAction("Create", "Categories_Verification");
+            }
+            return View(verification);
+        }
+
         // GET: Verifications/Edit/5
         public ActionResult Edit(int? id)
         {
