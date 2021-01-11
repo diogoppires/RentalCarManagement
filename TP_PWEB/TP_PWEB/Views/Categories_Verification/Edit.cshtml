@@ -1,4 +1,4 @@
-﻿@model TP_PWEB.Models.Categories_Verification
+﻿@model TP_PWEB.Models.ModelWithAll
 
 @{
     ViewBag.Title = "Edit";
@@ -12,25 +12,24 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Categories_Verification</h4>
+        <h3>List of Vehicle Type: @ViewBag.ThisCategory</h3>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IDCategories_Verification)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IDCategories, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.IDCategories, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.IDCategories, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IDVerification, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.IDVerification, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.IDVerification, "", new { @class = "text-danger" })
-            </div>
+        <h4>Verifications</h4>
+        <div class="control-label col-md-2">
+            <ol>
+                @for (int i = 0; i < Model.ListOfVerifications.Count(); i++)
+                {
+                    var disp = Model.ListOfVerifications.ElementAt(i).VerificationName;
+                    var cb = Model.ChoosenVerifications;
+                    <li>
+                        @Html.DisplayFor(modelItem => disp)
+                        @Html.EditorFor(model => Model.ChoosenVerifications[i])
+                    </li>
+                }
+            </ol>
+            @Html.ActionLink("Create a new verification", "Create_Outside", "Verifications")
         </div>
 
         <div class="form-group">

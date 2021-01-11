@@ -81,6 +81,23 @@ namespace TP_PWEB.Controllers
             return View(categories_Verification);
         }
 
+        private bool[] getListVerifications(Category id)
+        {
+            var allCatVerifications = db.Categories_Verification.Where(s=> s.IDCategory == id.idCategory);
+            var allVerifications = db.Verifications.ToList();
+            bool[] checkedCatVer = new bool[db.Verifications.Count()];
+
+            foreach(var item in allCatVerifications)
+            {
+                var val = allVerifications.Select((s, i) => new { i, s })
+                    .Where(t => t.s.IDVerifications == item.IDVerification)
+                    .Select(t => t.i)
+                    .First();
+                checkedCatVer[val] = true;
+            }
+            return checkedCatVer;
+        }
+
         // GET: Categories_Verification/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -88,12 +105,15 @@ namespace TP_PWEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Categories_Verification categories_Verification = db.Categories_Verification.Find(id);
-            if (categories_Verification == null)
-            {
-                return HttpNotFound();
-            }
-            return View(categories_Verification);
+            Category thisCat = db.Categories.Find(id);
+            ViewBag.ThisCategory = thisCat.Name;
+
+            ModelWithAll all = new ModelWithAll();
+            all.ListOfVerifications = db.Verifications.ToList();
+            all.ChoosenVerifications = getListVerifications(thisCat);
+
+
+            return View(all);
         }
 
         // POST: Categories_Verification/Edit/5
@@ -101,15 +121,40 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IDCategories_Verification,IDCategories,IDVerification")] Categories_Verification categories_Verification)
+        public ActionResult Edit(ModelWithAll modelAll, int? id)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(categories_Verification).State = EntityState.Modified;
+                //Get the actual category being edited
+                Category thisCat = db.Categories.Find(id);
+
+                //Obtain all the Categories_Verification with this categories and delete them all.
+                var allCat = db.Categories_Verification.Where(s => s.IDCategory == id);
+                foreach(var item in allCat)
+                {
+                    db.Categories_Verification.Remove(item);
+                }
+
+                //Verify the choosen verifications by the user and add them to the db.
+                for (int i = 0; i < modelAll.ChoosenVerifications.Count(); i++)
+                {
+                    //Add Verifications
+                    var allVerifications = db.Verifications.ToList();
+
+                    if (modelAll.ChoosenVerifications[i] == true)
+                    {
+                        Categories_Verification cv = new Categories_Verification();
+                        cv.Category = thisCat;
+                        cv.IDCategory = thisCat.idCategory;
+                        cv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
+                        cv.Verification = allVerifications.ElementAt(i);
+                        db.Categories_Verification.Add(cv);
+                    }
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(categories_Verification);
+            return View(modelAll);
         }
 
         // GET: Categories_Verification/Delete/5

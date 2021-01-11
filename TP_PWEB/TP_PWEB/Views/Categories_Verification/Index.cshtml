@@ -23,9 +23,9 @@
             @Html.DisplayFor(modelItem => item.Category.Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IDCategories_Verification }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IDCategories_Verification }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IDCategories_Verification })
+            @Html.ActionLink("Edit", "Edit", new { id=item.Category.idCategory }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Category.idCategory }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Category.idCategory })
         </td>
     </tr>
 }
