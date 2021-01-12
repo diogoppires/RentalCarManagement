@@ -256,7 +256,7 @@ namespace TP_PWEB.Views.Vehicles
             if(vehicles_Verification.Count() == 0)
             {
                 Vehicle vehicle = db.Vehicles.Find(id);
-                vL.catVer = db.Categories_Verification.Include(cv => cv.Verification).Where(v => v.IDCategory == vehicle.idCategory).ToList();
+                vL.catVer = db.Categories_Verification.Include(cv => cv.Verification).Where(v => v.IDCategory == vehicle.idCategory && v.Company.IDCompany == vehicle.Company.IDCompany).ToList();
             }
             else
             {
