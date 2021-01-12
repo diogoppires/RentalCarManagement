@@ -1,0 +1,60 @@
+﻿@model TP_PWEB.Models.AllVerifications
+
+@{
+    ViewBag.Title = "VerificationList";
+}
+
+<h2>Verification List</h2>
+
+<table class="table">
+    @{
+        if (Model.vehVer != null)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehVer.First().IDVehicle)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehVer.First().Vehicle.Brand)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehVer.First().Verification)
+                </th>
+                <th></th>
+            </tr>
+
+            foreach (var item in Model.vehVer)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vehicle.IDVehicle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vehicle.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IDVerification)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.catVer.First().Category.Name)
+                </th>
+                <th></th>
+            </tr>
+
+            foreach (var item in Model.catVer)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Verification.VerificationName)
+                    </td>
+                </tr>
+            }
+        }
+    }
+</table>

@@ -243,6 +243,29 @@ namespace TP_PWEB.Views.Vehicles
             return RedirectToAction("Index");
         }
 
+        public ActionResult VerificationList(int? id)
+        {
+            AllVerifications vL = new AllVerifications();
+            IEnumerable<Vehicle_Verification> vehicles_Verification;
+            if (id == null)
+            {
+                vehicles_Verification = db.Vehicles_Verifications.Include(v => v.Vehicle);
+                return View(vL);
+            }
+            vehicles_Verification = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == id);
+            if(vehicles_Verification.Count() == 0)
+            {
+                Vehicle vehicle = db.Vehicles.Find(id);
+                vL.catVer = db.Categories_Verification.Include(cv => cv.Verification).Where(v => v.IDCategory == vehicle.idCategory).ToList();
+            }
+            else
+            {
+                vL.vehVer = vehicles_Verification.ToList();
+            }
+
+            return View(vL);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
