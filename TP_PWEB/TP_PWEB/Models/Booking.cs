@@ -6,6 +6,13 @@ using System.Web;
 
 namespace TP_PWEB.Models
 {
+    public enum States{
+        PENDING,
+        APPROVED,
+        CARDELIVERED,
+        CARRECEIVED
+    }
+
     public class Booking
     {
         [Key]
@@ -13,8 +20,7 @@ namespace TP_PWEB.Models
         [Display(Name = "Initial Date Booking")]
         [DataType(DataType.Date)]
         public DateTime bookingInit { get; set; }
-
-
+        public States state { get; set; }
         [Display(Name = "Final Date Booking")]
         [DataType(DataType.Date)]
         public DateTime bookingEnd { get; set; }
