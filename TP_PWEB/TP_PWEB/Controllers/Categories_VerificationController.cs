@@ -102,7 +102,7 @@ namespace TP_PWEB.Controllers
             Company c = getThisUserCompany();
             var allCatVerifications = db.Categories_Verification.Where(s=> s.IDCategory == id.idCategory && s.Company.IDCompany == c.IDCompany);
             var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == c.IDCompany).ToList();
-            bool[] checkedCatVer = new bool[db.Verifications.Count()];
+            bool[] checkedCatVer = new bool[allVerifications.Count()];
 
             foreach(var item in allCatVerifications)
             {
