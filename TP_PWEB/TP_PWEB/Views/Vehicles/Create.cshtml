@@ -73,23 +73,30 @@
     </div>
     <hr />
 
-    <h4>Verifications</h4>
-    <div class="control-label col-md-2">
-        <ol>
-            @for (int i = 0; i < Model.ListOfVerifications.Count(); i++)
-            {
-                var disp = Model.ListOfVerifications.ElementAt(i).VerificationName;
-                var cb = Model.ChoosenVerifications;
-                <li>
-                    @Html.DisplayFor(modelItem => disp)
-                    @Html.EditorFor(model => Model.ChoosenVerifications[i])
-                </li>
-            }
-        </ol>
+    <div>
+        <button id="clicker" type="button" class="btn btn-default"> Custom Verifications </button>
     </div>
+    
+    <div id="verifications">
+        <h4>Custom Verifications</h4>
+        <div class="control-label col-md-2">
+            <ol>
+                @for (int i = 0; i < Model.ListOfVerifications.Count(); i++)
+                {
+                    var disp = Model.ListOfVerifications.ElementAt(i).VerificationName;
+                    var cb = Model.ChoosenVerifications;
+                    <li>
+                        @Html.DisplayFor(modelItem => disp, new { id = " allText " })
+                        @Html.EditorFor(model => Model.ChoosenVerifications[i])
+                    </li>
+                }
+            </ol>
+        </div>
+    </div>
+    
 
     <div class="control-label col-md-2">
-        
+
     </div>
 
     <div class="form-group">
@@ -98,12 +105,27 @@
         </div>
     </div>
 </div>
-    }
+}
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script>
+        $(function () {
+            $('#clicker').click((function () {
+                if ($("#verifications").css("visibility") === "hidden") {
+                    $("#verifications").css("visibility", "visible");
+                }
+                else {
+                    $("#verifications").css("visibility", "hidden");
+                }
+            }));
+        });
+    </script>
+}

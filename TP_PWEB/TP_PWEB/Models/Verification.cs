@@ -11,5 +11,6 @@ namespace TP_PWEB.Models
         [Key]
         public int IDVerifications { get; set; }
         public string VerificationName { get; set; }
+        public virtual Company Company { get; set; }
     }
 }

@@ -1,0 +1,49 @@
+﻿@model TP_PWEB.Models.ModelWithAll
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h3>List of Vehicle Type: @ViewBag.ThisCategory</h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <h4>Verifications</h4>
+        <div class="control-label col-md-2">
+            <ol>
+                @for (int i = 0; i < Model.ListOfVerifications.Count(); i++)
+                {
+                    var disp = Model.ListOfVerifications.ElementAt(i).VerificationName;
+                    var cb = Model.ChoosenVerifications;
+                    <li>
+                        @Html.DisplayFor(modelItem => disp)
+                        @Html.EditorFor(model => Model.ChoosenVerifications[i])
+                    </li>
+                }
+            </ol>
+            @Html.ActionLink("Create a new verification", "Create_Outside", "Verifications")
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

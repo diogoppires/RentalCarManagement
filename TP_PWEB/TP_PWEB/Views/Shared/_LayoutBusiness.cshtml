@@ -23,7 +23,13 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Manage Employees", "Index", "Employees")</li>
                     <li>@Html.ActionLink("Manage Vehicles Catalog", "Index", "Vehicles")</li>
-                    <li>@Html.ActionLink("Vehicles Verifications", "Index", "Verifications")</li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button">Verifications</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li style="padding:5px">@Html.ActionLink("Individual Verifications", "Index", "Verifications")</li>
+                            <li style="padding:5px">@Html.ActionLink("Vehicles Verifications", "Index", "Categories_Verification")</li>
+                        </ul>
+                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

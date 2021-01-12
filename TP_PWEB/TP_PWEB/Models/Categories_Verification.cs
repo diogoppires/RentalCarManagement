@@ -6,14 +6,14 @@ using System.Web;
 
 namespace TP_PWEB.Models
 {
-    public class Vehicle_Verification
+    public class Categories_Verification
     {
         [Key]
-        public int IDVehicle_Verification { get; set; }
-        public int IDVehicle { get; set; }
+        public int IDCategories_Verification { get; set; }
+        public int IDCategory { get; set; }
         public int IDVerification { get; set; }
 
-        public virtual Vehicle Vehicle { get; set; }
+        public virtual Category Category { get; set; }
         public virtual Verification Verification { get; set; }
         public virtual Company Company { get; set; }
     }

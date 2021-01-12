@@ -24,13 +24,23 @@ namespace TP_PWEB.Views.Vehicles
             return uniqueBookings;
         }
 
+        //This method will get 
+        private Company getThisUserCompany()
+        {
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var company = db.Companies.Find(user.idCompany.IDCompany);
+            return company;
+        }
+
         // GET: Vehicles
         public ActionResult Index(DateTime? initDate, DateTime? endDate)
         {
-            ViewBag.InvalidDates = false;
+            
             var vehicles = db.Vehicles.Include(v => v.Category);
             if(initDate != null && endDate != null)
             {
+                ViewBag.InvalidDates = false;
                 if (DateTime.Compare(initDate.Value, endDate.Value) > 0)
                 {
                     ViewBag.InvalidDates = true;
@@ -75,17 +85,13 @@ namespace TP_PWEB.Views.Vehicles
             return View(vehicle);
         }
 
-        private Company getCompany(string currentUserId)
-        {
-            return db.AdminBusinesses.Where(s => s.idUser.Id == currentUserId).Select(s => s.idCompany).First();
-        }
-
         // GET: Vehicles/Create
         public ActionResult Create()
         {
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
             var tempModel = new VehicleAndVerifications();
-            tempModel.ListOfVerifications = db.Verifications.ToList();
+            var company = getThisUserCompany();
+            tempModel.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
             tempModel.ChoosenVerifications = new bool[tempModel.ListOfVerifications.Count()];
             return View(tempModel);
         }
@@ -99,9 +105,11 @@ namespace TP_PWEB.Views.Vehicles
         {
             if (ModelState.IsValid)
             {
+                var company = getThisUserCompany();
+
                 //Add Verifications
-                var allVerifications = db.Verifications.ToList();
-                for(int i = 0; i < tempModel.ChoosenVerifications.Count(); i++)
+                var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany).ToList();
+                for(int i = 0; i < allVerifications.Count(); i++)
                 {
                     if(tempModel.ChoosenVerifications[i] == true)
                     {
@@ -110,12 +118,13 @@ namespace TP_PWEB.Views.Vehicles
                         vv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
                         vv.Vehicle = vehicle;
                         vv.Verification = allVerifications.ElementAt(i);
+                        vv.Company = company;
                         db.Vehicles_Verifications.Add(vv);
                     }
                 }
 
                 //Add Company
-                vehicle.Company = getCompany(User.Identity.GetUserId());
+                vehicle.Company = company;
                 //Add Category
                 vehicle.idCategory = idCategory;
                 //Add Vehicle to database
@@ -126,6 +135,24 @@ namespace TP_PWEB.Views.Vehicles
             }
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
             return View(vehicle);
+        }
+
+        private bool[] getListVerifications(int? id)
+        {
+            Company c = getThisUserCompany();
+            IQueryable<Vehicle_Verification> allVehicleVerifications = db.Vehicles_Verifications.Where(s => s.IDVehicle == id);
+            var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == c.IDCompany).ToList();
+            bool[] checkedVehVer = new bool[allVerifications.Count()];
+
+            foreach (var item in allVehicleVerifications)
+            {
+                var val = allVerifications.Select((s, i) => new { i, s })
+                    .Where(t => t.s.IDVerifications == item.IDVerification)
+                    .Select(t => t.i)
+                    .First();
+                checkedVehVer[val] = true;
+            }
+            return checkedVehVer;
         }
 
         // GET: Vehicles/Edit/5
@@ -140,8 +167,15 @@ namespace TP_PWEB.Views.Vehicles
             {
                 return HttpNotFound();
             }
+
+            VehicleAndVerifications modelVV = new VehicleAndVerifications();
+            Company c = getThisUserCompany();
+            modelVV.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == c.IDCompany);
+            modelVV.ChoosenVerifications = getListVerifications(id);
+            modelVV.idCategory = vehicle.idCategory;
+            modelVV.vehicle = vehicle;
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
-            return View(vehicle);
+            return View(modelVV);
         }
 
         // POST: Vehicles/Edit/5
@@ -149,16 +183,38 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price,idCategory")] Vehicle vehicle)
+        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, VehicleAndVerifications modelVV, int idCategory)
         {
             if (ModelState.IsValid)
             {
+                Company company = getThisUserCompany();
+                var allVeh = db.Vehicles_Verifications.Where(s => s.IDVehicle == vehicle.IDVehicle && s.Company.IDCompany == company.IDCompany);
+                foreach (var item in allVeh)
+                {
+                    db.Vehicles_Verifications.Remove(item);
+                }
+
+                var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany).ToList();
+                //Verify the choosen verifications by the user and add them to the db.
+                for (int i = 0; i < allVerifications.Count(); i++)
+                {
+                    //Add Verifications
+                    if (modelVV.ChoosenVerifications[i] == true)
+                    {
+                        Vehicle_Verification vv = new Vehicle_Verification();
+                        vv.IDVehicle = vehicle.IDVehicle;
+                        vv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
+                        vv.Vehicle = vehicle;
+                        vv.Verification = allVerifications.ElementAt(i);
+                        vv.Company = company;
+                        db.Vehicles_Verifications.Add(vv);
+                    }
+                }
+                vehicle.idCategory = idCategory;
                 db.Entry(vehicle).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
             }
-            ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
-            return View(vehicle);
+            return RedirectToAction("Index");
         }
 
         // GET: Vehicles/Delete/5
