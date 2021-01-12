@@ -24,6 +24,14 @@ namespace TP_PWEB.Views.Vehicles
             return uniqueBookings;
         }
 
+        private Company getThisUserCompany()
+        {
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var company = db.Companies.Find(user.idCompany.IDCompany);
+            return company;
+        }
+
         // GET: Vehicles
         public ActionResult Index(DateTime? initDate, DateTime? endDate)
         {
@@ -75,17 +83,13 @@ namespace TP_PWEB.Views.Vehicles
             return View(vehicle);
         }
 
-        private Company getCompany(string currentUserId)
-        {
-            return db.AdminBusinesses.Where(s => s.idUser.Id == currentUserId).Select(s => s.idCompany).First();
-        }
-
         // GET: Vehicles/Create
         public ActionResult Create()
         {
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
             var tempModel = new VehicleAndVerifications();
-            tempModel.ListOfVerifications = db.Verifications.ToList();
+            var company = getThisUserCompany();
+            tempModel.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
             tempModel.ChoosenVerifications = new bool[tempModel.ListOfVerifications.Count()];
             return View(tempModel);
         }
@@ -99,9 +103,11 @@ namespace TP_PWEB.Views.Vehicles
         {
             if (ModelState.IsValid)
             {
+                var company = getThisUserCompany();
+
                 //Add Verifications
-                var allVerifications = db.Verifications.ToList();
-                for(int i = 0; i < tempModel.ChoosenVerifications.Count(); i++)
+                var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany).ToList();
+                for(int i = 0; i < allVerifications.Count(); i++)
                 {
                     if(tempModel.ChoosenVerifications[i] == true)
                     {
@@ -110,12 +116,13 @@ namespace TP_PWEB.Views.Vehicles
                         vv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
                         vv.Vehicle = vehicle;
                         vv.Verification = allVerifications.ElementAt(i);
+                        vv.Company = company;
                         db.Vehicles_Verifications.Add(vv);
                     }
                 }
 
                 //Add Company
-                vehicle.Company = getCompany(User.Identity.GetUserId());
+                vehicle.Company = company;
                 //Add Category
                 vehicle.idCategory = idCategory;
                 //Add Vehicle to database

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
@@ -17,7 +18,10 @@ namespace TP_PWEB.Controllers
         // GET: Verifications
         public ActionResult Index()
         {
-            return View(db.Verifications.ToList());
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var listVerifications = db.Verifications.Where(v => v.Company.IDCompany == user.idCompany.IDCompany).ToList();
+            return View(listVerifications);
         }
 
         // GET: Verifications/Details/5
@@ -50,6 +54,10 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                var idUser = User.Identity.GetUserId();
+                var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+                var company = db.Companies.Find(user.idCompany.IDCompany);
+                verification.Company = company;
                 db.Verifications.Add(verification);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -72,6 +80,11 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                var idUser = User.Identity.GetUserId();
+                var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+                var company = db.Companies.Find(user.idCompany.IDCompany);
+                verification.Company = company;
                 db.Verifications.Add(verification);
                 db.SaveChanges();
                 return RedirectToAction("Create", "Categories_Verification");

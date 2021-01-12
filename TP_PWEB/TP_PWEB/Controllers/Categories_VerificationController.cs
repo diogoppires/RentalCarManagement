@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -14,11 +15,22 @@ namespace TP_PWEB.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        private Company getThisUserCompany()
+        {
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var company = db.Companies.Find(user.idCompany.IDCompany);
+            return company;
+        }
+
         // GET: Categories_Verification
         public ActionResult Index()
         {
-            var uniqueItems = db.Categories_Verification.ToList();
-            uniqueItems = uniqueItems.GroupBy(x => x.IDCategory).Select(g => g.First()).ToList();
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var listVerifications = db.Categories_Verification.Where(v => v.Company.IDCompany == user.idCompany.IDCompany).ToList();
+
+            var uniqueItems = listVerifications.GroupBy(x => x.IDCategory).Select(g => g.First()).ToList();
             return View(uniqueItems);
         }
 
@@ -40,10 +52,11 @@ namespace TP_PWEB.Controllers
         // GET: Categories_Verification/Create
         public ActionResult Create()
         {
-
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
             ModelWithAll modelAll = new ModelWithAll();
-            modelAll.ListOfVerifications = db.Verifications.ToList();
+            var company = getThisUserCompany();
+
+            modelAll.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
             modelAll.ChoosenVerifications = new bool[modelAll.ListOfVerifications.Count()];
             return View(modelAll);
         }
@@ -57,12 +70,14 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                var company = getThisUserCompany();
+
                 //Get category
                 Category actualCategory = db.Categories.Find(idCategory);
 
                 //Add Verifications
-                var allVerifications = db.Verifications.ToList();
-                for (int i = 0; i < modelAll.ChoosenVerifications.Count(); i++)
+                var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany).ToList();
+                for (int i = 0; i < allVerifications.Count(); i++)
                 {
                     if (modelAll.ChoosenVerifications[i] == true)
                     {
@@ -71,6 +86,7 @@ namespace TP_PWEB.Controllers
                         cv.IDCategory = actualCategory.idCategory;
                         cv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
                         cv.Verification = allVerifications.ElementAt(i);
+                        cv.Company = company;
                         db.Categories_Verification.Add(cv);
                     }
                 }
@@ -83,8 +99,9 @@ namespace TP_PWEB.Controllers
 
         private bool[] getListVerifications(Category id)
         {
-            var allCatVerifications = db.Categories_Verification.Where(s=> s.IDCategory == id.idCategory);
-            var allVerifications = db.Verifications.ToList();
+            Company c = getThisUserCompany();
+            var allCatVerifications = db.Categories_Verification.Where(s=> s.IDCategory == id.idCategory && s.Company.IDCompany == c.IDCompany);
+            var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == c.IDCompany).ToList();
             bool[] checkedCatVer = new bool[db.Verifications.Count()];
 
             foreach(var item in allCatVerifications)
@@ -109,7 +126,9 @@ namespace TP_PWEB.Controllers
             ViewBag.ThisCategory = thisCat.Name;
 
             ModelWithAll all = new ModelWithAll();
-            all.ListOfVerifications = db.Verifications.ToList();
+            var company = getThisUserCompany();
+
+            all.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
             all.ChoosenVerifications = getListVerifications(thisCat);
 
 
@@ -125,22 +144,23 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                var company = getThisUserCompany();
+
                 //Get the actual category being edited
                 Category thisCat = db.Categories.Find(id);
 
                 //Obtain all the Categories_Verification with this categories and delete them all.
-                var allCat = db.Categories_Verification.Where(s => s.IDCategory == id);
+                var allCat = db.Categories_Verification.Where(s => s.IDCategory == id && s.Company.IDCompany == company.IDCompany);
                 foreach(var item in allCat)
                 {
                     db.Categories_Verification.Remove(item);
                 }
 
+                var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany).ToList();
                 //Verify the choosen verifications by the user and add them to the db.
-                for (int i = 0; i < modelAll.ChoosenVerifications.Count(); i++)
+                for (int i = 0; i < allVerifications.Count(); i++)
                 {
                     //Add Verifications
-                    var allVerifications = db.Verifications.ToList();
-
                     if (modelAll.ChoosenVerifications[i] == true)
                     {
                         Categories_Verification cv = new Categories_Verification();
@@ -148,6 +168,7 @@ namespace TP_PWEB.Controllers
                         cv.IDCategory = thisCat.idCategory;
                         cv.IDVerification = allVerifications.ElementAt(i).IDVerifications;
                         cv.Verification = allVerifications.ElementAt(i);
+                        cv.Company = company;
                         db.Categories_Verification.Add(cv);
                     }
                 }

@@ -15,5 +15,6 @@ namespace TP_PWEB.Models
 
         public virtual Category Category { get; set; }
         public virtual Verification Verification { get; set; }
+        public virtual Company Company { get; set; }
     }
 }
