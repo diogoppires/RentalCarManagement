@@ -80,6 +80,7 @@ namespace TP_PWEB.Controllers
                     ApplicationUser currentUser = db.Users.Where(u => u.Id == userID).First();
                     booking.User = currentUser;
                     booking.vehicle = db.Vehicles.Find(id);
+                    booking.state = States.PENDING;
                     db.Bookings.Add(booking);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Vehicles");
