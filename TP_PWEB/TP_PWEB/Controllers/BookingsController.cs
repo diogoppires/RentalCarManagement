@@ -11,21 +11,55 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
 {
+    [Authorize(Roles = "Client,Employee")]
     public class BookingsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Bookings
-        public ActionResult Index(string userName)
+        
+        public ActionResult Index()
         {
-            if (!String.IsNullOrEmpty(userName))
+            var userName = User.Identity.Name;
+
+            if (User.IsInRole("Client"))
             {
                 var userBookings = db.Bookings.Where(b => b.User.UserName.Equals(userName));
                 return View(userBookings.ToList());
+            }else if (User.IsInRole("Employee"))
+            {
+                var company = db.Employees.Where(c => c.idUser.UserName == userName).Select(c => c.idCompany).First();
+                var companieBookings = db.Bookings.Where(b => 
+                b.vehicle.Company.IDCompany == company.IDCompany && 
+                b.state == States.PENDING
+                );
+                return View(companieBookings.ToList());
             }
-            return View(db.Bookings.ToList());
+            
+            return View(new List<Booking>());
         }
 
+        public ActionResult Remove(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var booking = db.Bookings.Find(id);
+                db.Bookings.Remove(booking);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Approve(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var booking = db.Bookings.Find(id);
+                booking.state = States.APPROVED;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
         // GET: Bookings/Details/5
         public ActionResult Details(int? id)
         {

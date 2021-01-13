@@ -4,45 +4,118 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Booking List</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.User.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.vehicle.IDVehicle)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.bookingInit)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.bookingEnd)
-        </th>
-        <th></th>
-    </tr>
+@{
+    if (User.IsInRole("Client"))
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehicle.Brand)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehicle.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.bookingInit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.bookingEnd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.state)
+                </th>
+            </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(model => item.User.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.vehicle.IDVehicle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.bookingInit)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.bookingEnd)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idBooking }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idBooking }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idBooking })
-        </td>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.vehicle.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.vehicle.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.bookingInit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.bookingEnd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.state)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.idBooking }) |
+                        @Html.ActionLink("More", "Details", new { id = item.idBooking }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.idBooking })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else if (User.IsInRole("Employee"))
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehicle.Brand)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.vehicle.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.bookingInit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.bookingEnd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.state)
+                </th>
+
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.vehicle.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.vehicle.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.bookingInit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.bookingEnd)
+                    </td>
+                    <th>
+                        @Html.DisplayFor(modelItem => item.state)
+                    </th>
+                    <td>
+                        @Html.ActionLink("More", "Details", new { id = item.idBooking })
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Approve", "Approve","Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                        @Html.ActionLink("Refuse", "Remove", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
 }
 
-</table>
+
+
+
+
