@@ -4,36 +4,34 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Booking Details</h2>
 
 <div>
-    <dl class="dl-horizontal">
-        <dt>
-            <h4>Booking Id</h4>
-        </dt>
-        <dd>
-            <h4>@Html.DisplayFor(model => model.idBooking)</h4>
-        </dd>
-    </dl>
 
     <hr />
 
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.bookingInit)
-        </dt>
+        <dt>Booking Id</dt>
+        <dd>@Html.DisplayFor(model => model.idBooking)</dd>
+        <dt>Check_In Date</dt>
+        <dd>@Html.DisplayFor(model => model.bookingInit)</dd>
+        <dt>Check_Out</dt>
+        <dd>@Html.DisplayFor(model => model.bookingEnd)</dd>
+        <dt>State</dt>
+        <dd>@Html.DisplayFor(model => model.state)</dd>
+    </dl>
+    <hr />
 
-        <dd>
-            @Html.DisplayFor(model => model.bookingInit)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.bookingEnd)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.bookingEnd)
-        </dd>
+    <h4>Vehicle</h4>
+    <dl class="dl-horizontal">
+        <dt>Brand</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Brand)</dd>
+        <dt>Model</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Model)</dd>
+        <dt>Price</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Price) €</dd>
+        <dt>Companie</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Company.Name)</dd>
 
     </dl>
 </div>

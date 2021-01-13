@@ -106,8 +106,8 @@
                     </td>
 
                     <td>
-                        @Html.ActionLink("Approve", "Approve","Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                        @Html.ActionLink("Refuse", "Remove", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                        @Html.ActionLink("Approve", "ApproveBooking","Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                        @Html.ActionLink("Refuse", "RemoveBooking", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
                     </td>
                 </tr>
             }
