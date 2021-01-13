@@ -39,6 +39,19 @@ namespace TP_PWEB.Controllers
             return View(new List<Booking>());
         }
 
+        [Authorize(Roles = "Employee")]
+        public ActionResult IndexCheckedIn()
+        {
+            var userName = User.Identity.Name;
+            var company = db.Employees.Where(c => c.idUser.UserName == userName).Select(c => c.idCompany).First();
+            var companieBookings = db.Bookings.Where(b =>
+            b.vehicle.Company.IDCompany == company.IDCompany &&
+            b.state == States.APPROVED
+            );
+            return View(companieBookings.ToList());
+        }
+
+
         public ActionResult Remove(int id)
         {
             if (ModelState.IsValid)
@@ -60,6 +73,26 @@ namespace TP_PWEB.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public ActionResult CheckedIn(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var booking = db.Bookings.Find(id);
+                booking.state = States.CHECKED_IN;
+                CheckedIn ck_in = new CheckedIn();
+                ck_in.Booking = booking;
+                ck_in.Damages = booking.vehicle.Damages;
+                ck_in.InitKm = booking.vehicle.NumberKm;
+                ck_in.FuelTankStatus = booking.vehicle.VehicleTank;
+                db.CheckedIns.Add(ck_in);
+                db.Entry(booking).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+
         // GET: Bookings/Details/5
         public ActionResult Details(int? id)
         {

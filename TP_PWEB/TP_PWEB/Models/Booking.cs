@@ -9,8 +9,8 @@ namespace TP_PWEB.Models
     public enum States{
         PENDING,
         APPROVED,
-        CARDELIVERED,
-        CARRECEIVED
+        CHECKED_IN,
+        CHECKED_OUT,
     }
 
     public class Booking

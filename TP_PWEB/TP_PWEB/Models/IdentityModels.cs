@@ -34,6 +34,7 @@ namespace TP_PWEB.Models
         public DbSet<Verification> Verifications { get; set; }
         public DbSet<Vehicle_Verification> Vehicles_Verifications { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<CheckedIn> CheckedIns { get; set; }
 
         public static ApplicationDbContext Create()
         {
