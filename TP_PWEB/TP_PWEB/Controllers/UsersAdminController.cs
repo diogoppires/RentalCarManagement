@@ -228,6 +228,17 @@ namespace TP_PWEB
             }
         }
 
+        private void deleteVerifications(ApplicationUser user)
+        {
+            var idCompany = getCompany(user).IDCompany;
+            var listVerifications = db.Verifications.Where(s => s.Company.IDCompany == idCompany).ToList();
+            foreach (var ver in listVerifications)
+            {
+                db.Verifications.Remove(ver);
+                db.SaveChanges();
+            }
+        }
+
         //
         // POST: /Users/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -255,6 +266,7 @@ namespace TP_PWEB
                     if (verifyLastUser(user) == 1)
                     {
                         deleteEmployeesAccounts(user);
+                        deleteVerifications(user);
                         db.Companies.Remove(getCompany(user));
                         db.SaveChanges();
                     }
