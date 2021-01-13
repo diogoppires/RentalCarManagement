@@ -104,20 +104,10 @@
                     <td>
                         @Html.ActionLink("More", "Details", new { id = item.idBooking })
                     </td>
-
-                    @if (item.state == TP_PWEB.Models.States.PENDING)
-                    {
-                        <td>
-                            @Html.ActionLink("Approve", "Approve", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                            @Html.ActionLink("Refuse", "Remove", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                        </td>
-                    }
-                    else if(item.state == TP_PWEB.Models.States.APPROVED)
-                    {
-                        <td>
-                            @Html.ActionLink("Check-In", "CheckedIn", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                        </td>
-                    }
+                    <td>
+                        @Html.ActionLink("Approve", "ApproveBooking","Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                        @Html.ActionLink("Refuse", "RemoveBooking", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                    </td>
                 </tr>
             }
         </table>

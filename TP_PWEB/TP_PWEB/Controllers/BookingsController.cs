@@ -51,8 +51,7 @@ namespace TP_PWEB.Controllers
             return View(companieBookings.ToList());
         }
 
-
-        public ActionResult Remove(int id)
+        public ActionResult RemoveBooking(int id)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +62,7 @@ namespace TP_PWEB.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Approve(int id)
+        public ActionResult ApproveBooking(int id)
         {
             if (ModelState.IsValid)
             {
