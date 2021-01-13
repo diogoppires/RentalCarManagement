@@ -84,7 +84,6 @@
                 @for (int i = 0; i < Model.ListOfVerifications.Count(); i++)
                 {
                     var disp = Model.ListOfVerifications.ElementAt(i).VerificationName;
-                    var cb = Model.ChoosenVerifications;
                     <li>
                         @Html.DisplayFor(modelItem => disp, new { id = " allText " })
                         @Html.EditorFor(model => Model.ChoosenVerifications[i])
