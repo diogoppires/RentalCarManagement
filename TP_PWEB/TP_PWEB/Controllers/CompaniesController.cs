@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -89,6 +90,39 @@ namespace TP_PWEB.Controllers
             return View(company);
         }
 
+        private void deleteEmployeesAccounts(Company company)
+        {
+            var listEmployees = db.Employees.ToList();
+            var deletedEmployes = listEmployees.Where(s => s.idCompany.IDCompany == company.IDCompany);
+            foreach (var employee in deletedEmployes)
+            {
+                db.Users.Remove(employee.idUser);
+                db.Employees.Remove(employee);
+                db.SaveChanges();
+            }
+        }
+
+        private void deleteVerifications(int idCompany)
+        {
+            var listVerifications = db.Verifications.Where(s => s.Company.IDCompany == idCompany).ToList();
+            foreach (var ver in listVerifications)
+            {
+                db.Verifications.Remove(ver);
+                db.SaveChanges();
+            }
+        }
+
+        private void deleteBusinessAdms(Company company)
+        {
+            var listAdmBusiness = db.AdminBusinesses.Where(admB => admB.idCompany.IDCompany == company.IDCompany).ToList();
+            foreach (var adminBusiness in listAdmBusiness)
+            {
+                db.Users.Remove(adminBusiness.idUser);
+                db.AdminBusinesses.Remove(adminBusiness);
+                db.SaveChanges();
+            }
+        }
+
         // GET: Companies/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -110,6 +144,9 @@ namespace TP_PWEB.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Company company = db.Companies.Find(id);
+            deleteBusinessAdms(company);
+            deleteEmployeesAccounts(company);
+            deleteVerifications(id);
             db.Companies.Remove(company);
             db.SaveChanges();
             return RedirectToAction("Index");

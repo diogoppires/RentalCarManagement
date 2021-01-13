@@ -41,12 +41,16 @@ namespace TP_PWEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var listVerifications = db.Categories_Verification.Where(cv => cv.IDCategory == id);
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var listVerifications = db.Categories_Verification.Where(v => v.Company.IDCompany == user.idCompany.IDCompany);
+            var filteredListVerifications = listVerifications.Where(v => v.Category.idCategory == id).ToList();
+
             if (listVerifications == null)
             {
                 return HttpNotFound();
             }
-            return View(listVerifications.ToList());
+            return View(filteredListVerifications);
         }
 
         // GET: Categories_Verification/Create
@@ -185,12 +189,16 @@ namespace TP_PWEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Categories_Verification categories_Verification = db.Categories_Verification.Find(id);
-            if (categories_Verification == null)
+            var idUser = User.Identity.GetUserId();
+            var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
+            var listVerifications = db.Categories_Verification.Where(v => v.Company.IDCompany == user.idCompany.IDCompany);
+            var filteredListVerifications = listVerifications.Where(v => v.Category.idCategory == id).ToList();
+
+            if (listVerifications == null)
             {
                 return HttpNotFound();
             }
-            return View(categories_Verification);
+            return View(filteredListVerifications);
         }
 
         // POST: Categories_Verification/Delete/5
@@ -198,8 +206,13 @@ namespace TP_PWEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Categories_Verification categories_Verification = db.Categories_Verification.Find(id);
-            db.Categories_Verification.Remove(categories_Verification);
+            Company company = getThisUserCompany();
+            //Obtain all the Categories_Verification with this categories and delete them all.
+            var allCat = db.Categories_Verification.Where(s => s.IDCategory == id && s.Company.IDCompany == company.IDCompany);
+            foreach (var item in allCat)
+            {
+                db.Categories_Verification.Remove(item);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }

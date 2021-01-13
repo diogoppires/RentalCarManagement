@@ -229,6 +229,51 @@ namespace TP_PWEB.Controllers
         }
 
         //
+        // GET: /Account/Register
+        [Authorize(Roles = "Business")]
+        public ActionResult RegisterAdmBusiness()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [Authorize(Roles = "Business")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterAdmBusiness(RegisterViewModel modelUser)
+        {
+            var userAdm = User.Identity.GetUserId();
+            Company company = db.AdminBusinesses.Where(s => s.idUser.Id == userAdm).Select(s => s.idCompany).First();
+
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = modelUser.Email, Email = modelUser.Email };
+                var result = await UserManager.CreateAsync(user, modelUser.Password);
+
+                AdminBusiness admBusiness = new AdminBusiness();
+                if (result.Succeeded)
+                {
+                    //Give the user the choosen role
+                    var currentUser = UserManager.FindByName(user.UserName);
+                    var roleresult = UserManager.AddToRole(currentUser.Id, "Business");
+
+
+                    admBusiness.idUser = db.Users.Find(user.Id);
+                    admBusiness.idCompany = company;
+                    db.AdminBusinesses.Add(admBusiness);
+                    db.SaveChanges();
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction("Index", "Home");
+        }
+
+        //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]

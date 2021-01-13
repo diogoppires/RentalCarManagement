@@ -1,4 +1,4 @@
-﻿@model TP_PWEB.Models.Categories_Verification
+﻿@model IEnumerable<TP_PWEB.Models.Categories_Verification>
 
 @{
     ViewBag.Title = "Delete";
@@ -12,24 +12,19 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.IDCategories)
+            @Html.DisplayNameFor(model => model.Verification.VerificationName)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IDCategories)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IDVerification)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IDVerification)
-        </dd>
-
+        @foreach (var item in Model)
+        {
+            <dd>
+                @Html.DisplayFor(modelItem => item.Verification.VerificationName)
+            </dd>
+        }
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
