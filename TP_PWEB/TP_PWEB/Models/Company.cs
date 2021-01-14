@@ -10,6 +10,7 @@ namespace TP_PWEB.Models
     {
         [Key]
         public int IDCompany { get; set; }
+        [Display(Name = "Company Name")]
         public string Name { get; set; }
     }
 }

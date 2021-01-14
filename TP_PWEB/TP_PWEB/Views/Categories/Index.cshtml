@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Category>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Categories";
 }
 
-<h2>Index</h2>
+<h2>Categories</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New Category", "Create")
 </p>
 <table class="table">
     <tr>
@@ -37,9 +37,3 @@
 </tr>
 }
 </table>
-
-<div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Change Visibility" class="btn btn-default" />
-    </div>
-</div>

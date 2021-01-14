@@ -19,6 +19,22 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.isVisible)
+        </dt>
+
+        @if (Model.isVisible)
+        {
+            <dd>
+                Visible
+            </dd>
+        }
+        else
+        {
+            <dd>
+                Not Visible
+            </dd>
+        }
     </dl>
 
     @using (Html.BeginForm()) {

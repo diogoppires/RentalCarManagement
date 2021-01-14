@@ -58,6 +58,14 @@ namespace TP_PWEB
             return View(await UserManager.Users.ToListAsync());
         }
 
+        public async Task<ActionResult> IndexClients()
+        {
+            var clientRoleId = RoleManager.Roles.Where(r => r.Name == "Client").First().Id;
+            var allList = await UserManager.Users.ToListAsync();
+            var clientsList = allList.Where(c => c.Roles.Any(r => r.RoleId == clientRoleId)).ToList();
+            return View(clientsList);
+        }
+
         //
         // GET: /Users/Details/5
         public async Task<ActionResult> Details(string id)

@@ -79,7 +79,7 @@ namespace TP_PWEB.Views
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idCategory,Name")] Category category)
+        public ActionResult Edit([Bind(Include = "idCategory, Name, isVisible")] Category category)
         {
             if (ModelState.IsValid)
             {
