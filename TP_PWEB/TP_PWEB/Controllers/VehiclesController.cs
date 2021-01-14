@@ -54,7 +54,9 @@ namespace TP_PWEB.Views.Vehicles
             //If not, it is because he is a client or something else, and all the vehicles can be shown.
             else
             {
+                //Get all vehicles 
                 var vehicles = db.Vehicles.Include(v => v.Category);
+                //Verify if dates are valid in order to avoid errors and false bookings
                 if (initDate != null && endDate != null)
                 {
                     ViewBag.InvalidDates = false;
@@ -68,14 +70,15 @@ namespace TP_PWEB.Views.Vehicles
                     ViewBag.InitDateSaved = initDate.Value.ToString("dd/MM/yyyy");
                     ViewBag.EndDateSaved = endDate.Value.ToString("dd/MM/yyyy");
 
+                    //Get all the bookings that were selected between the given dates by the user.
                     var listOfBookings = getFilteredBookings(initDate.Value, endDate.Value);
-                    IEnumerable<Vehicle> availableVehicles = Enumerable.Empty<Vehicle>();
+                    IEnumerable<Vehicle> availableVehicles = db.Vehicles.ToList();
+
+                    //If there is any booking in between the given dates, the cars should disappear temporaly from the list of available vehicles
                     if (listOfBookings.Count() != 0)
                     {
-                        foreach (var b in listOfBookings)
-                        {
-                            availableVehicles = db.Vehicles.Where(av => av.IDVehicle != b.vehicle.IDVehicle);
-                        }
+                        var bookedCars = listOfBookings.Select(s => s.vehicle);
+                        availableVehicles = availableVehicles.Except(bookedCars);
                     }
                     else
                     {
