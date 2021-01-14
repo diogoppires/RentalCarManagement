@@ -162,7 +162,7 @@ namespace TP_PWEB.Controllers
             if (ModelState.IsValid)
             {
                 booking.vehicle = db.Vehicles.Find(id);
-                if (verifyBooking(booking))
+                if (verifyBooking(booking) && DateTime.Compare(booking.bookingInit, booking.bookingEnd) < 0)
                 {
                     ViewBag.validBooking = true;
                     var userID = User.Identity.GetUserId();
