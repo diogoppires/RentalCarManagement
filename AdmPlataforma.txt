@@ -1,7 +1,7 @@
 Administrador da Plataforma
 
 >>>MANAGE COMPANIES<<<
-- Melhorar o display do Details
+- Melhorar a view do Details
 
 >>>ALL USERS<<<
 -Trocar o nome para Clients
