@@ -5,7 +5,6 @@ Administrador da Empresa
 
 >>>Manage Vehicles Catalog<<<
 - Alterar o Details (PIRES)
-- Não é possível apagar veículos com reservas efetuadas. O veículo só pode ser apagado se não estiver reservado. Deve surgir uma mensagem informativa ao utilizador.
 - No Create, deve ser possível criar uma nova verificação
 - O 'Custom Verifications' deve passar para lado do form.
 - 'Details' deve fazer aparecer informação de forma mais conveniente.
