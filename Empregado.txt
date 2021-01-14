@@ -1,0 +1,21 @@
+Empregado
+
+>>Manage Bookings<<<
+- Separar mais o items entre si.
+- Colocar os botões de 'Approve' e 'Refuse' dentro do 'Details' (Ter cuidado porque o Details é partilhado noutras Views)
+- O Empregado deve ser redirecionado para o próprio Index.
+
+
+>>Check-in Vehicles<<<
+- Tem que ser redirecionado para a mesma página
+
+
+>>Check-out Vehicles<<<
+- Chamar o updateVehicle
+- Alterar o nome do botão e o título
+- Disabilitar o escolher ficheiros quando o Damages não estiver selecionado
+- Analisar o Escolher Ficheiros
+
+>>Vehicles Verifications<<
+- Fazer uma validação das verificações.
+- O empregado só consegue abandonar esta secção quando fizer a validação de todas as verificações
