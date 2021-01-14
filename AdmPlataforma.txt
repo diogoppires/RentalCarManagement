@@ -1,0 +1,19 @@
+Administrador da Plataforma
+
+>>>MANAGE COMPANIES<<<
+-Permitir ver detalhes (funcionários, número de carros, administradores, número de reservas)
+-Trocar o nome da página
+-No details do Companies colocam-se os administradores e os empregados
+
+>>>ALL USERS<<<
+-Trocar o nome para Clients
+-Definir apenas para apresentar Clients
+-Remover o 'Delete' e o 'Create New'
+
+>>>Manage Vehicles Category<<<
+-Remover botão do 'Change Visibility'
+-Trocar o nome
+
+>>>Catalog<<<
+- Aparece apenas: Categoria, Marca, Modelo, Empresa.
+- Aparecer detalhes do veículo e (se houver tempo) colocar as reservas a que este veículo está associado
