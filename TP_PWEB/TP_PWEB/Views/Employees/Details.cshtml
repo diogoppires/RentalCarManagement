@@ -11,24 +11,23 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.iDUser)
+            @Html.DisplayNameFor(model => model.idUser.Email)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.iDUser)
+            @Html.DisplayFor(model => model.idUser.Email)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.iDCompany)
+            @Html.DisplayNameFor(model => model.idCompany.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.iDCompany)
+            @Html.DisplayFor(model => model.idCompany.Name)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idEmployee }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

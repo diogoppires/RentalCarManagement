@@ -18,7 +18,14 @@ namespace TP_PWEB.Controllers
         // GET: Employees
         public ActionResult Index()
         {
-            return View(db.Employees.ToList());
+            var user = db.Users.Find(User.Identity.GetUserId());
+            var adminBusiness = db.AdminBusinesses.Where(admB => admB.idUser.Id == user.Id).First();
+            if(adminBusiness == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var listEmployees = db.Employees.Where(e => e.idCompany.IDCompany == adminBusiness.idCompany.IDCompany).ToList();
+            return View(listEmployees);
         }
 
         // GET: Employees/Details/5

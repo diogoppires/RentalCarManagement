@@ -80,6 +80,7 @@ namespace TP_PWEB.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
     }
 
