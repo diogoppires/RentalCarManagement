@@ -70,6 +70,12 @@ namespace TP_PWEB.Views.Vehicles
             return View(vehicles.ToList());
         }
 
+        public ActionResult IndexAdmin()
+        {
+            var vehicles = db.Vehicles.Include(v => v.Category);
+            return View(vehicles.ToList());
+        }
+
         // GET: Vehicles/Details/5
         public ActionResult Details(int? id)
         {
