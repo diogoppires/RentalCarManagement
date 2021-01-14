@@ -127,15 +127,15 @@
                 }
 
 
-                <td>
-                    @{
-                        if (User.IsInRole("Client"))
-                        {
-                            @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                        }
+            <td>
+                @{
+                    if (User.IsInRole("Client"))
+                    {
+                        @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
                     }
+                }
 
-                </td>
+            </td>
             </tr>
         }
     }

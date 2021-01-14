@@ -253,6 +253,17 @@ namespace TP_PWEB.Views.Vehicles
             {
                 return HttpNotFound();
             }
+            Booking booking = db.Bookings.Where(b => b.vehicle.IDVehicle == vehicle.IDVehicle).FirstOrDefault();
+            ViewBag.booked = false;
+            if (booking == null)
+            {
+                return View(vehicle);
+            }
+            if(booking.state > 0)
+            {
+                ViewBag.booked = true;
+                return View(vehicle);
+            }
             return View(vehicle);
         }
 
