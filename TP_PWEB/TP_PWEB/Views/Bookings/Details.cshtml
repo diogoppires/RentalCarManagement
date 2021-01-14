@@ -7,9 +7,7 @@
 <h2>Booking Details</h2>
 
 <div>
-
     <hr />
-
     <dl class="dl-horizontal">
         <dt>Booking Id</dt>
         <dd>@Html.DisplayFor(model => model.idBooking)</dd>
@@ -20,8 +18,8 @@
         <dt>State</dt>
         <dd>@Html.DisplayFor(model => model.state)</dd>
     </dl>
-    <hr />
 
+    <hr />
     <h4>Vehicle</h4>
     <dl class="dl-horizontal">
         <dt>Brand</dt>
@@ -30,12 +28,24 @@
         <dd>@Html.DisplayFor(model => model.vehicle.Model)</dd>
         <dt>Price</dt>
         <dd>@Html.DisplayFor(model => model.vehicle.Price) €</dd>
-        <dt>Companie</dt>
+        <dt>Company</dt>
         <dd>@Html.DisplayFor(model => model.vehicle.Company.Name)</dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idBooking }) |
-    @Html.ActionLink("Back to List", "Index")
+    @{
+        if (Model.state == TP_PWEB.Models.States.PENDING)
+        {
+            @Html.ActionLink("Back to List", "Index")
+        }
+        else if (Model.state == TP_PWEB.Models.States.APPROVED)
+        {
+            @Html.ActionLink("Back to List", "IndexCheckedIn")
+        }
+        else if (Model.state == TP_PWEB.Models.States.CHECKED_IN)
+        {
+            @Html.ActionLink("Back to List", "Index")
+        }
+    }
 </p>
