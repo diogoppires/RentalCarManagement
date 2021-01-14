@@ -21,6 +21,41 @@ namespace TP_PWEB.Controllers
             return View(db.Companies.ToList());
         }
 
+        private IEnumerable<Employee> GetAllEmployees(Company company)
+        {
+            return db.Employees.Where(e => e.idCompany.IDCompany == company.IDCompany);
+        }
+
+        private IEnumerable<AdminBusiness> GetAllAdmBusiness(Company company)
+        {
+            return db.AdminBusinesses.Where(admB => admB.idCompany.IDCompany == company.IDCompany);
+        }
+
+        private int GetNumPendingBookings(Company company)
+        {
+            return db.Bookings.Where(b => b.state == States.PENDING && b.vehicle.Company.IDCompany == company.IDCompany).Count();
+        }
+
+        private int GetNumApprovedBookings(Company company)
+        {
+            return db.Bookings.Where(b => b.state == States.APPROVED && b.vehicle.Company.IDCompany == company.IDCompany).Count();
+        }
+
+        private int GetNumCheckedInBookings(Company company)
+        {
+            return db.Bookings.Where(b => b.state == States.CHECKED_IN && b.vehicle.Company.IDCompany == company.IDCompany).Count();
+        }
+
+        private int GetNumCheckedOutBookings(Company company)
+        {
+            return db.Bookings.Where(b => b.state == States.CHECKED_OUT && b.vehicle.Company.IDCompany == company.IDCompany).Count();
+        }
+
+        private int GetNumVehicles(Company company)
+        {
+            return db.Vehicles.Where(v => v.Company.IDCompany == company.IDCompany).Count();
+        }
+
         // GET: Companies/Details/5
         public ActionResult Details(int? id)
         {
@@ -33,7 +68,17 @@ namespace TP_PWEB.Controllers
             {
                 return HttpNotFound();
             }
-            return View(company);
+
+            AllCompanyDetails allCD = new AllCompanyDetails();
+            allCD.allEmployes = GetAllEmployees(company).ToList();
+            allCD.allAdmBusinesses = GetAllAdmBusiness(company).ToList();
+            allCD.num_pendingBookings = GetNumPendingBookings(company);
+            allCD.num_approvedBookings = GetNumApprovedBookings(company);
+            allCD.num_checkedInBookings = GetNumCheckedInBookings(company);
+            allCD.num_checkedOutBookings = GetNumCheckedOutBookings(company);
+            allCD.num_vehicles = GetNumVehicles(company);
+
+            return View(allCD);
         }
 
         // GET: Companies/Create

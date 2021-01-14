@@ -1,9 +1,7 @@
 Administrador da Plataforma
 
 >>>MANAGE COMPANIES<<<
--Permitir ver detalhes (funcionários, número de carros, administradores, número de reservas)
--Trocar o nome da página
--No details do Companies colocam-se os administradores e os empregados
+- Melhorar o display do Details
 
 >>>ALL USERS<<<
 -Trocar o nome para Clients
