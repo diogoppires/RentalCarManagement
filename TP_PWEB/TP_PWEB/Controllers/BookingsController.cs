@@ -191,7 +191,7 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Bookings/Create
-        public ActionResult CreateCheckedOut(int? id)
+        public ActionResult CreateCheckedOut(int id)
         {
             return View();
         }
@@ -216,10 +216,82 @@ namespace TP_PWEB.Controllers
                         file.SaveAs(Path.Combine(Server.MapPath("~/damagedVehicles"), Path.GetFileNameWithoutExtension("Vehicle_ID_" + ck_out.Booking.vehicle.IDVehicle) + Path.GetExtension(file.FileName)));
                     }
                 }
-
-                return RedirectToAction("Index");
+                return RedirectToAction("BookingVerifications", new { id = id });
             }
             return View(ck_out);
+        }
+
+        public ActionResult BookingVerifications(int? id)
+        {
+            GetVerifications gV = new GetVerifications();
+            Booking booking = db.Bookings.Find(id);
+            IEnumerable<Vehicle_Verification> vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == booking.vehicle.IDVehicle);
+            if (vehicles_Verifications.Count() == 0)
+            {
+                IEnumerable<Categories_Verification> categories_Verifications = db.Categories_Verification
+                    .Include(cv => cv.Verification)
+                    .Where(v => v.IDCategory == booking.vehicle.idCategory && v.Company.IDCompany == booking.vehicle.Company.IDCompany)
+                    .ToList();
+                gV.catVer = categories_Verifications.ToList();
+                gV.ChoosenVerifications = new bool[gV.catVer.Count()];
+                return View(gV);
+            }
+            gV.vehVer = vehicles_Verifications.ToList();
+            gV.ChoosenVerifications = new bool[gV.vehVer.Count()];
+            return View(gV);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BookingVerifications(GetVerifications gV, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                //Get category
+                Booking booking = db.Bookings.Find(id);
+
+
+                IEnumerable<Vehicle_Verification> vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == booking.vehicle.IDVehicle);
+                gV.vehVer = vehicles_Verifications.ToList();
+                if (vehicles_Verifications.Count() == 0)
+                {
+                    IEnumerable<Categories_Verification> categories_Verifications = db.Categories_Verification
+                        .Include(cv => cv.Verification)
+                        .Where(v => v.IDCategory == booking.vehicle.idCategory && v.Company.IDCompany == booking.vehicle.Company.IDCompany)
+                        .ToList();
+                    gV.catVer = categories_Verifications.ToList();
+                }
+
+                if (gV.catVer != null)
+                {
+                    for (int i = 0; i < gV.catVer.Count(); i++)
+                    {
+                        CheckOut_Verification ckOut_Ver = new CheckOut_Verification();
+                        ckOut_Ver.Booking = booking;
+                        ckOut_Ver.Verification = gV.catVer.ElementAt(i).Verification;
+                        ckOut_Ver.isVerified = gV.ChoosenVerifications.ElementAt(i);
+                        db.CheckOut_Verifications.Add(ckOut_Ver);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < gV.vehVer.Count(); i++)
+                    {
+                        if (gV.ChoosenVerifications[i] == true)
+                        {
+                            CheckOut_Verification ckOut_Ver = new CheckOut_Verification();
+                            ckOut_Ver.Booking = booking;
+                            ckOut_Ver.Verification = gV.vehVer.ElementAt(i).Verification;
+                            ckOut_Ver.isVerified = gV.ChoosenVerifications.ElementAt(i);
+                            db.CheckOut_Verifications.Add(ckOut_Ver);
+                        }
+                    }
+                }
+                
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(gV);
         }
 
 
