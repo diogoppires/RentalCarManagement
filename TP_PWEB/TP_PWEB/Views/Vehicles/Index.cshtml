@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Vehicle>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Vehicles";
 }
 
-<h2>Index</h2>
+
 @{
     if (User.Identity.IsAuthenticated && User.IsInRole("Business"))
     {
+        <h2>Company Vehicles</h2>
         <p>
             @Html.ActionLink("Create New", "Create")
         </p>
@@ -15,15 +16,24 @@
 }
 
 
-@using (Html.BeginForm())
-{
-    <p>
-        Initial Date: @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
-        Ending Date: @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
-        <input type="submit" value="Search" />
-        <input type="reset" value="Clear Dates" />
-    </p>
+@{
+    //Users logged as clients or non logged can search for dates.
+    if (User.IsInRole("Client") || !User.Identity.IsAuthenticated)
+    {
+        <h2>Available Vehicles</h2>
+        using (Html.BeginForm())
+        {
+            <p>
+                Initial Date: @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
+                Ending Date: @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
+                <input type="submit" value="Search" />
+                <input type="reset" value="Clear Dates" />
+            </p>
+        }
+    }
+
 }
+
 
 @{
     if (ViewBag.invalidDates != null)

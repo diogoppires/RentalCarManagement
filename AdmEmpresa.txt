@@ -1,16 +1,10 @@
 Administrador da Empresa
 
 >>>Manage Employees<<<
-- Trocar o nome
-- 'Create new Admin Business' deve sair. O admin da empresa deve pedir à plataforma para criar uma nova conta admin.
-- Só devem aparecer os Employees da empresa em questão.
-- Edit e Details estão a dar erro de compilação.
+- 'Create new Admin Business' deve sair. O admin da empresa deve pedir à plataforma para criar uma nova conta admin. --> Colocar onde?
 
 >>>Manage Vehicles Catalog<<<
-- Trocar o nome
-- Barra de Pesquisa de Reservas tem que sair
-- Só devem aparecer os veículos da empresa
-- Alterar o Details 
+- Alterar o Details (PIRES)
 - Não é possível apagar veículos com reservas efetuadas. O veículo só pode ser apagado se não estiver reservado. Deve surgir uma mensagem informativa ao utilizador.
 - No Create, deve ser possível criar uma nova verificação
 - O 'Custom Verifications' deve passar para lado do form.

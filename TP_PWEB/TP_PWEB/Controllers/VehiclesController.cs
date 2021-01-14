@@ -36,38 +36,56 @@ namespace TP_PWEB.Views.Vehicles
         // GET: Vehicles
         public ActionResult Index(DateTime? initDate, DateTime? endDate)
         {
-            
-            var vehicles = db.Vehicles.Include(v => v.Category);
-            if(initDate != null && endDate != null)
+            var user = db.Users.Find(User.Identity.GetUserId());
+            if(user == null)
             {
-                ViewBag.InvalidDates = false;
-                if (DateTime.Compare(initDate.Value, endDate.Value) > 0)
-                {
-                    ViewBag.InvalidDates = true;
-                    ModelState.Clear();
-                    return View(vehicles.ToList());
-                }
-                
-                ViewBag.InitDateSaved = initDate.Value.ToString("dd/MM/yyyy");
-                ViewBag.EndDateSaved = endDate.Value.ToString("dd/MM/yyyy");
-
-                var listOfBookings = getFilteredBookings(initDate.Value, endDate.Value); 
-                IEnumerable<Vehicle> availableVehicles = Enumerable.Empty<Vehicle>();
-                if(listOfBookings.Count() != 0)
-                {
-                    foreach (var b in listOfBookings)
-                    {
-                        availableVehicles = db.Vehicles.Where(av => av.IDVehicle != b.vehicle.IDVehicle);
-                    }
-                }
-                else
-                {
-                    availableVehicles = db.Vehicles;
-                }
-                ModelState.Clear();
-                return View(availableVehicles.ToList());
+                //It is created a user in order to avoid an exception during the verification in the next statement
+                user = new ApplicationUser();
             }
-            return View(vehicles.ToList());
+
+            //If the logged user is a business admin, its going to be shown all the vehicles associated to his company
+            if(db.AdminBusinesses.Any(admB => admB.idUser.Id == user.Id))
+            {
+                var admBusiness = db.AdminBusinesses.Where(admB => admB.idUser.Id == user.Id).First();
+                var companyVehicles = db.Vehicles.Include(v => v.Category)
+                                                 .Where(v => v.Company.IDCompany == admBusiness.idCompany.IDCompany);
+                return View(companyVehicles.ToList());
+            }
+            //If not, it is because he is a client or something else, and all the vehicles can be shown.
+            else
+            {
+                var vehicles = db.Vehicles.Include(v => v.Category);
+                if (initDate != null && endDate != null)
+                {
+                    ViewBag.InvalidDates = false;
+                    if (DateTime.Compare(initDate.Value, endDate.Value) > 0)
+                    {
+                        ViewBag.InvalidDates = true;
+                        ModelState.Clear();
+                        return View(vehicles.ToList());
+                    }
+
+                    ViewBag.InitDateSaved = initDate.Value.ToString("dd/MM/yyyy");
+                    ViewBag.EndDateSaved = endDate.Value.ToString("dd/MM/yyyy");
+
+                    var listOfBookings = getFilteredBookings(initDate.Value, endDate.Value);
+                    IEnumerable<Vehicle> availableVehicles = Enumerable.Empty<Vehicle>();
+                    if (listOfBookings.Count() != 0)
+                    {
+                        foreach (var b in listOfBookings)
+                        {
+                            availableVehicles = db.Vehicles.Where(av => av.IDVehicle != b.vehicle.IDVehicle);
+                        }
+                    }
+                    else
+                    {
+                        availableVehicles = db.Vehicles;
+                    }
+                    ModelState.Clear();
+                    return View(availableVehicles.ToList());
+                }
+            }
+            return View(db.Vehicles.ToList());
         }
 
         public ActionResult IndexAdmin()
