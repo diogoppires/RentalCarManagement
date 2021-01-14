@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -51,6 +52,18 @@ namespace TP_PWEB.Controllers
             return View(companieBookings.ToList());
         }
 
+        [Authorize(Roles = "Employee")]
+        public ActionResult IndexCheckedOut()
+        {
+            var userName = User.Identity.Name;
+            var company = db.Employees.Where(c => c.idUser.UserName == userName).Select(c => c.idCompany).First();
+            var companieBookings = db.Bookings.Where(b =>
+            b.vehicle.Company.IDCompany == company.IDCompany &&
+            b.state == States.CHECKED_IN
+            );
+            return View(companieBookings.ToList());
+        }
+
 
         public ActionResult Remove(int id)
         {
@@ -60,7 +73,7 @@ namespace TP_PWEB.Controllers
                 db.Bookings.Remove(booking);
                 db.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexCheckedIn");
         }
 
         public ActionResult Approve(int id)
@@ -71,7 +84,7 @@ namespace TP_PWEB.Controllers
                 booking.state = States.APPROVED;
                 db.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexCheckedIn");
         }
 
         public ActionResult CheckedIn(int id)
@@ -89,9 +102,17 @@ namespace TP_PWEB.Controllers
                 db.Entry(booking).State = EntityState.Modified;
                 db.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexCheckedOut");
         }
 
+        public ActionResult CheckedOut(int id)
+        {
+            //var booking = db.Bookings.Find(id);
+            //booking.state = States.CHECKED_OUT;
+            //db.Entry(booking).State = EntityState.Modified;
+            //db.SaveChanges();
+            return RedirectToAction("CreateCheckedOut", new { id = id });
+        }
 
         // GET: Bookings/Details/5
         public ActionResult Details(int? id)
@@ -159,6 +180,48 @@ namespace TP_PWEB.Controllers
             }
             return View(booking);
         }
+
+
+        private void updateVehicle(Booking booking, CheckedOut ck_out)
+        {
+            booking.vehicle.NumberKm += ck_out.FinalKm;
+            booking.vehicle.VehicleTank = ck_out.FinalTankStatus;
+            booking.vehicle.Damages = ck_out.Damages;
+            db.Entry(booking.vehicle).State = EntityState.Modified;
+        }
+
+        // GET: Bookings/Create
+        public ActionResult CreateCheckedOut(int? id)
+        {
+            return View();
+        }
+
+        // POST: Bookings/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCheckedOut([Bind(Include = "FinalKm, FinalTankStatus, Damages")] CheckedOut ck_out, IEnumerable<HttpPostedFileBase> files, int id)
+        {
+            ViewBag.validBooking = false;
+            if (ModelState.IsValid)
+            {
+                ck_out.Booking = db.Bookings.Find(id);
+                db.CheckedOuts.Add(ck_out);
+                db.SaveChanges();
+                foreach (var file in files)
+                {
+                    if(file != null && file.ContentLength > 0)
+                    {
+                        file.SaveAs(Path.Combine(Server.MapPath("~/damagedVehicles"), Path.GetFileNameWithoutExtension("Vehicle_ID_" + ck_out.Booking.vehicle.IDVehicle) + Path.GetExtension(file.FileName)));
+                    }
+                }
+
+                return RedirectToAction("Index");
+            }
+            return View(ck_out);
+        }
+
 
         // GET: Bookings/Edit/5
         public ActionResult Edit(int? id)

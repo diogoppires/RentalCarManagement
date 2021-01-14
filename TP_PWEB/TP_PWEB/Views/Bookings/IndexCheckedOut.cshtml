@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<TP_PWEB.Models.Booking>
 
 @{
-    ViewBag.Title = "Checked In";
+    ViewBag.Title = "Checked Out";
 }
 
-<h2>Booking List - Check-In</h2>
+<h2>Booking List - Check-Out</h2>
 
 <table class="table">
     <tr>
@@ -54,7 +54,7 @@
                 @Html.ActionLink("More", "Details", new { id = item.idBooking })
             </td>
             <td>
-                @Html.ActionLink("Check-In", "CheckedOut", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                @Html.ActionLink("Check-Out", "CheckedOut", "Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
             </td>
         </tr>
     }
