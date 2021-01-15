@@ -66,8 +66,9 @@ namespace TP_PWEB.Controllers
             return View(verification);
         }
 
-        public ActionResult Create_Outside()
+        public ActionResult Create_Outside(string from)
         {
+            ViewBag.returnDestiny = from;
             return View();
         }
 
@@ -76,7 +77,7 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification)
+        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification, string from)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +88,14 @@ namespace TP_PWEB.Controllers
                 verification.Company = company;
                 db.Verifications.Add(verification);
                 db.SaveChanges();
-                return RedirectToAction("Create", "Categories_Verification");
+                if(from == "categories_verification")
+                {
+                    return RedirectToAction("Create", "Categories_Verification");
+                }
+                else if(from == "vehicle")
+                {
+                    return RedirectToAction("Create", "Vehicles");
+                }
             }
             return View(verification);
         }
