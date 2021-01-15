@@ -88,6 +88,12 @@ namespace TP_PWEB.Controllers
             if (ModelState.IsValid)
             {
 
+                if (db.Verifications.Select(v => v.VerificationName == verification.VerificationName) != null)
+                {
+                    ModelState.AddModelError("name", "Verification '" + verification.VerificationName + "' already exists.");
+                    return View(verification);
+                }
+
                 var idUser = User.Identity.GetUserId();
                 var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
                 var company = db.Companies.Find(user.idCompany.IDCompany);
@@ -130,6 +136,12 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.Verifications.Select(v => v.VerificationName == verification.VerificationName) != null)
+                {
+                    ModelState.AddModelError("name", "Verification '" + verification.VerificationName + "' already exists.");
+                    return View(verification);
+                }
+
                 db.Entry(verification).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
