@@ -10,6 +10,8 @@ namespace TP_PWEB.Models
     {
         [Key]
         public int IDVerifications { get; set; }
+        [Display(Name = "Verification Name")]
+        [Required]
         public string VerificationName { get; set; }
         public virtual Company Company { get; set; }
     }

@@ -54,6 +54,13 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                if (db.Verifications.Select(v => v.VerificationName == verification.VerificationName) != null)
+                {
+                    ModelState.AddModelError("name", "Verification '" + verification.VerificationName + "' already exists.");
+                    return View(verification);
+                }
+
                 var idUser = User.Identity.GetUserId();
                 var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
                 var company = db.Companies.Find(user.idCompany.IDCompany);
@@ -62,12 +69,12 @@ namespace TP_PWEB.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(verification);
         }
 
-        public ActionResult Create_Outside()
+        public ActionResult Create_Outside(string from)
         {
+            ViewBag.returnDestiny = from;
             return View();
         }
 
@@ -76,10 +83,16 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification)
+        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification, string from)
         {
             if (ModelState.IsValid)
             {
+
+                if (db.Verifications.Select(v => v.VerificationName == verification.VerificationName) != null)
+                {
+                    ModelState.AddModelError("name", "Verification '" + verification.VerificationName + "' already exists.");
+                    return View(verification);
+                }
 
                 var idUser = User.Identity.GetUserId();
                 var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
@@ -87,7 +100,14 @@ namespace TP_PWEB.Controllers
                 verification.Company = company;
                 db.Verifications.Add(verification);
                 db.SaveChanges();
-                return RedirectToAction("Create", "Categories_Verification");
+                if(from == "categories_verification")
+                {
+                    return RedirectToAction("Create", "Categories_Verification");
+                }
+                else if(from == "vehicle")
+                {
+                    return RedirectToAction("Create", "Vehicles");
+                }
             }
             return View(verification);
         }
@@ -116,6 +136,12 @@ namespace TP_PWEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.Verifications.Select(v => v.VerificationName == verification.VerificationName) != null)
+                {
+                    ModelState.AddModelError("name", "Verification '" + verification.VerificationName + "' already exists.");
+                    return View(verification);
+                }
+
                 db.Entry(verification).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

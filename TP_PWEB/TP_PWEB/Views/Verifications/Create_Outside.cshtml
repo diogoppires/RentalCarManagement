@@ -31,9 +31,19 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to Creation", "Create", "Categories_Verification")
-</div>
+@if (ViewBag.returnDestiny == "categories_verification")
+{
+    <div>
+        @Html.ActionLink("Back to Creation", "Create", "Categories_Verification")
+    </div>
+}
+else if (ViewBag.returnDestiny == "vehicle")
+{
+    <div>
+        @Html.ActionLink("Back to Creation", "Create", "Vehicles")
+    </div>
+}
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

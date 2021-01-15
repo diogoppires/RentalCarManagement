@@ -66,15 +66,25 @@
         <dd>
             @Html.DisplayFor(model => model.Price)
         </dd>
-
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+        if (@ViewBag.booked)
+        {
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" disabled="disabled" />
+            </div>
+            <p style = "color:red;font-weight:bold">You can not delete a booked vehicle!</p>
+        }
+        else
+        {
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default"/>
+            </div>   
+        }
+        @Html.ActionLink("Back to List", "Index")
     }
 </div>

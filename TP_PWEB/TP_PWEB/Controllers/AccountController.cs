@@ -218,7 +218,7 @@ namespace TP_PWEB.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return RedirectToAction("Index", "Home");
+            return View(modelUser);
         }
         //
         // GET: /Account/Register

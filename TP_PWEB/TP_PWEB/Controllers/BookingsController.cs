@@ -129,17 +129,17 @@ namespace TP_PWEB.Controllers
             return View(booking);
         }
 
-        private HashSet<Booking> getFilteredBookings(DateTime initDate, DateTime endDate)
+        private HashSet<Booking> getFilteredBookings(DateTime initDate, DateTime endDate, int idVehicle)
         {
-            var filteredBookingsInit = db.Bookings.Where(b => ((DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)));
-            var filteredBookingsEnd = db.Bookings.Where(b => ((DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)));
+            var filteredBookingsInit = db.Bookings.Where(b => ((DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookingsEnd = db.Bookings.Where(b => ((DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
             var filteredBookings = filteredBookingsInit.Concat(filteredBookingsEnd).ToList();
             var uniqueBookings = new HashSet<Booking>(filteredBookings);
             return uniqueBookings;
         }
         private bool verifyBooking(Booking booking)
         {
-            var all = getFilteredBookings(booking.bookingInit, booking.bookingEnd);
+            var all = getFilteredBookings(booking.bookingInit, booking.bookingEnd, booking.vehicle.IDVehicle);
             return all.Count() == 0;
         }
 
@@ -161,13 +161,13 @@ namespace TP_PWEB.Controllers
             ViewBag.validBooking = false;
             if (ModelState.IsValid)
             {
-                if (verifyBooking(booking))
+                booking.vehicle = db.Vehicles.Find(id);
+                if (verifyBooking(booking) && DateTime.Compare(booking.bookingInit, booking.bookingEnd) < 0)
                 {
                     ViewBag.validBooking = true;
                     var userID = User.Identity.GetUserId();
                     ApplicationUser currentUser = db.Users.Where(u => u.Id == userID).First();
                     booking.User = currentUser;
-                    booking.vehicle = db.Vehicles.Find(id);
                     booking.state = States.PENDING;
                     db.Bookings.Add(booking);
                     db.SaveChanges();
