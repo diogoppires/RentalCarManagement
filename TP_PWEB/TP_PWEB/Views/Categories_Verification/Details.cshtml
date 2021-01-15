@@ -4,16 +4,14 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Verifications - @ViewBag.ThisCategoryName</h2>
 
 <div>
-    <h4>Categories_Verification</h4>
     <table class="table">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Verification.VerificationName)
             </th>
-            <th></th>
         </tr>
 
         @foreach (var item in Model)
@@ -25,6 +23,8 @@
             </tr>
         }
     </table>
+    @Html.ActionLink("Edit verifications","Edit", new { id = ViewBag.ThisCategoryId })
+
 </div>
 <p>
     @Html.ActionLink("Back to List", "Index")
