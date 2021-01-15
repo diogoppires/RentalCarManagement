@@ -73,7 +73,7 @@ namespace TP_PWEB.Controllers
                 db.Bookings.Remove(booking);
                 db.SaveChanges();
             }
-            return RedirectToAction("IndexCheckedIn");
+            return RedirectToAction("Index");
         }
 
         public ActionResult ApproveBooking(int id)
@@ -84,7 +84,7 @@ namespace TP_PWEB.Controllers
                 booking.state = States.APPROVED;
                 db.SaveChanges();
             }
-            return RedirectToAction("IndexCheckedIn");
+            return RedirectToAction("Index");
         }
 
         public ActionResult CheckedIn(int id)
@@ -115,7 +115,21 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Bookings/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id) 
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Booking booking = db.Bookings.Find(id);
+            if (booking == null)
+            {
+                return HttpNotFound();
+            }
+            return View(booking);
+        }
+
+        public ActionResult DetailsApprove(int? id)
         {
             if (id == null)
             {

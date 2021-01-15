@@ -1,0 +1,47 @@
+﻿@model TP_PWEB.Models.Booking
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Booking Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Booking Id</dt>
+        <dd>@Html.DisplayFor(model => model.idBooking)</dd>
+        <dt>Check_In Date</dt>
+        <dd>@Html.DisplayFor(model => model.bookingInit)</dd>
+        <dt>Check_Out</dt>
+        <dd>@Html.DisplayFor(model => model.bookingEnd)</dd>
+        <dt>State</dt>
+        <dd>@Html.DisplayFor(model => model.state)</dd>
+    </dl>
+
+    <hr />
+    <h4>Vehicle</h4>
+    <dl class="dl-horizontal">
+        <dt>Brand</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Brand)</dd>
+        <dt>Model</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Model)</dd>
+        <dt>Price</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Price) €</dd>
+        <dt>Company</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.Company.Name)</dd>
+
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.ActionLink("Approve", "ApproveBooking", "Bookings", new { id = Model.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+        </dt>
+        <dd>
+            @Html.ActionLink("Refuse", "RemoveBooking", "Bookings", new { id = Model.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+        </dd>
+    </dl>
+
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")   
+</p>
