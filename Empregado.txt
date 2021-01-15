@@ -2,8 +2,7 @@ Empregado
 
 >>Manage Bookings<<<
 - Separar mais o items entre si.
-- Colocar os botões de 'Approve' e 'Refuse' dentro do 'Details' (Ter cuidado porque o Details é partilhado noutras Views)
-- O Empregado deve ser redirecionado para o próprio Index.
+- Erro ao fazer delete do Booking no cliente
 
 
 >>Check-in Vehicles<<<

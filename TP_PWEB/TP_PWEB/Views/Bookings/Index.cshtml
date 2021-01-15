@@ -102,7 +102,7 @@
                         @Html.DisplayFor(modelItem => item.state)
                     </th>
                     <td>
-                        @Html.ActionLink("More", "Details", new { id = item.idBooking })
+                        @Html.ActionLink("More", "DetailsApprove", new { id = item.idBooking })
                     </td>
                     <td>
                         @Html.ActionLink("Approve", "ApproveBooking","Bookings", new { id = item.idBooking }, new { @style = " color: Black !important;", @class = "btn btn-default" })

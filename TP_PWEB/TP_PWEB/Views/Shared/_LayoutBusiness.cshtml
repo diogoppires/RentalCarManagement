@@ -21,7 +21,13 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Manage Employees", "Index", "Employees")</li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button">Human Resources</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li style="padding:5px">@Html.ActionLink("Manage Employees", "Index", "Employees")</li>
+                            <li style="padding:5px">@Html.ActionLink("Request New Administrator", "RegisterAdmBusiness", "Account")</li>
+                        </ul>
+                    </li>
                     <li>@Html.ActionLink("Manage Vehicles Catalog", "Index", "Vehicles")</li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button">Verifications</a>
