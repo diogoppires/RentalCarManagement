@@ -13,7 +13,7 @@
     
     <div class="form-horizontal">
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
         <div class="control-label col-md-2">
             <ol>
@@ -27,7 +27,7 @@
                     </li>
                 }
             </ol>
-            @Html.ActionLink("Create a new verification", "Create_Outside", "Verifications")
+            @Html.ActionLink("Create a new verification", "Create_Outside", "Verifications", new { from = "categories_verifications", id = ViewBag.ThisCategoryId }, null);
         </div>
 
         <div class="form-group">
