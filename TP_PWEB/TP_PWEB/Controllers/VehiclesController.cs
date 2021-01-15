@@ -291,16 +291,16 @@ namespace TP_PWEB.Views.Vehicles
                 return View(vL);
             }
             vehicles_Verification = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == id);
-            if(vehicles_Verification.Count() == 0)
+            Vehicle vehicle = db.Vehicles.Find(id);
+            if (vehicles_Verification.Count() == 0)
             {
-                Vehicle vehicle = db.Vehicles.Find(id);
                 vL.catVer = db.Categories_Verification.Include(cv => cv.Verification).Where(v => v.IDCategory == vehicle.idCategory && v.Company.IDCompany == vehicle.Company.IDCompany).ToList();
             }
             else
             {
                 vL.vehVer = vehicles_Verification.ToList();
             }
-
+            ViewBag.CarNameAndID = string.Format("{0} {1} (ID: {2})", vehicle.Brand, vehicle.Model, vehicle.IDVehicle);
             return View(vL);
         }
 
