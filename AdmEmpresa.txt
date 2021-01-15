@@ -23,8 +23,6 @@ caso tente criar um carro sem verificações sejam elas customizadas ou no templ
 >>>Inviduval Verifications<<<
 - Trocar o titulo
 
->>Categories Verifications<<<
-- Colocar todas as categorias disponíveis, e editar as verificações que já estão associadas.
 
 
 -->>>NÃO PODE APAGAR EMPRESA SE EXISTIREM RESERVAS
