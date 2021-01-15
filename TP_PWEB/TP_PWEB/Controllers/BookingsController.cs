@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using TP_PWEB.Models;
 
+
 namespace TP_PWEB.Controllers
 {
     [Authorize(Roles = "Client,Employee")]
@@ -307,7 +308,14 @@ namespace TP_PWEB.Controllers
             {
                 return HttpNotFound();
             }
-            return View(booking);
+
+            BookingsAndList bal = new BookingsAndList();
+            bal.Booking = booking;
+            if(booking.vehicle != null)
+            {
+                bal.listBookings = db.Bookings.Where(b => b.vehicle.IDVehicle == booking.vehicle.IDVehicle).ToList();
+            }
+            return View(bal);
         }
 
         // POST: Bookings/Edit/5
@@ -315,15 +323,27 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idBooking,bookingInit,bookingEnd")] Booking booking)
+        public ActionResult Edit([Bind(Include = "idBooking,bookingInit,bookingEnd, vehicle")] Booking booking, int id)
         {
+            ViewBag.validBooking = false;
             if (ModelState.IsValid)
             {
-                db.Entry(booking).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index", "Bookings", new { userName = User.Identity.Name });
+                booking.vehicle = db.Vehicles.Find(booking.vehicle.IDVehicle);
+                if (verifyBooking(booking) && DateTime.Compare(booking.bookingInit, booking.bookingEnd) < 0)
+                {
+                    ViewBag.validBooking = true;
+                    booking.state = States.PENDING;
+                    db.Entry(booking).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Bookings", new { userName = User.Identity.Name });
+                }
+                ModelState.Clear();
+                BookingsAndList bal = new BookingsAndList();
+                bal.Booking = booking;
+                bal.listBookings = db.Bookings.Where(b => b.vehicle.IDVehicle == booking.vehicle.IDVehicle).ToList();
+                return View(bal);
             }
-            return View(booking);
+            return View(new BookingsAndList());
         }
 
         // GET: Bookings/Delete/5

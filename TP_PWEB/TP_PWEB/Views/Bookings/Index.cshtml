@@ -31,12 +31,24 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.vehicle.Brand)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.vehicle.Model)
-                    </td>
+                    @if (item.vehicle == null)
+                    {
+                        <td>
+                            Vehicle Unavailable
+                        </td>
+                        <td>
+                            Vehicle Unavailable
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.vehicle.Brand)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.vehicle.Model)
+                        </td>
+                    }
                     <td>
                         @Html.DisplayFor(modelItem => item.bookingInit)
                     </td>
@@ -47,9 +59,14 @@
                         @Html.DisplayFor(modelItem => item.state)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.idBooking }) |
                         @Html.ActionLink("More", "Details", new { id = item.idBooking }) |
                         @Html.ActionLink("Delete", "Delete", new { id = item.idBooking })
+                    </td>
+                    <td>
+                        @if (item.state == TP_PWEB.Models.States.PENDING && item.vehicle != null)
+                        {
+                            @Html.ActionLink("Edit Booking", "Edit", new { id = item.idBooking }) 
+                        }
                     </td>
                 </tr>
             }
