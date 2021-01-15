@@ -6,8 +6,6 @@ Administrador da Empresa
 >>>Manage Vehicles Catalog<<<
 - Alterar o Details (PIRES)
 - 'Details' deve fazer aparecer informação de forma mais conveniente (PIRES)
-- Botão para criar um carro sem verificações e redirecionar o utilizador
-caso tente criar um carro sem verificações sejam elas customizadas ou no template da categoria.
 - Adicionar matricula aos carros (imagens)
 
 >>>Inviduval Verifications<<<
