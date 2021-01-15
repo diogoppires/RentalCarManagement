@@ -152,9 +152,25 @@ namespace TP_PWEB.Controllers
             var uniqueBookings = new HashSet<Booking>(filteredBookings);
             return uniqueBookings;
         }
+
+        private HashSet<Booking> getFilteredBookings_Edit(DateTime initDate, DateTime endDate, int idVehicle, int idBooking)
+        {
+            var filteredBookingsInit = db.Bookings.Where(b => (b.idBooking != idBooking && (DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookingsEnd = db.Bookings.Where(b => (b.idBooking != idBooking && (DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookings = filteredBookingsInit.Concat(filteredBookingsEnd).ToList();
+            var uniqueBookings = new HashSet<Booking>(filteredBookings);
+            return uniqueBookings;
+        }
+
         private bool verifyBooking(Booking booking)
         {
             var all = getFilteredBookings(booking.bookingInit, booking.bookingEnd, booking.vehicle.IDVehicle);
+            return all.Count() == 0;
+        }
+
+        private bool verifyBooking_Edit(Booking booking)
+        {
+            var all = getFilteredBookings_Edit(booking.bookingInit, booking.bookingEnd, booking.vehicle.IDVehicle,booking.idBooking);
             return all.Count() == 0;
         }
 
@@ -343,7 +359,7 @@ namespace TP_PWEB.Controllers
             if (ModelState.IsValid)
             {
                 booking.vehicle = db.Vehicles.Find(booking.vehicle.IDVehicle);
-                if (verifyBooking(booking) && DateTime.Compare(booking.bookingInit, booking.bookingEnd) < 0)
+                if (verifyBooking_Edit(booking) && DateTime.Compare(booking.bookingInit, booking.bookingEnd) < 0)
                 {
                     ViewBag.validBooking = true;
                     booking.state = States.PENDING;
