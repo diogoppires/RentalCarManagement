@@ -79,6 +79,7 @@ namespace TP_PWEB.Controllers
             }
             Category thisCat = db.Categories.Find(id);
             ViewBag.ThisCategory = thisCat.Name;
+            ViewBag.ThisCategoryId = id;
 
             ModelWithAll all = new ModelWithAll();
             var company = getThisUserCompany();

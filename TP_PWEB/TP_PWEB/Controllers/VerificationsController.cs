@@ -72,9 +72,10 @@ namespace TP_PWEB.Controllers
             return View(verification);
         }
 
-        public ActionResult Create_Outside(string from)
+        public ActionResult Create_Outside(string from,int? id)
         {
             ViewBag.returnDestiny = from;
+            ViewBag.returnDestinyCategory = id;
             return View();
         }
 
@@ -83,16 +84,19 @@ namespace TP_PWEB.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification, string from)
+        public ActionResult Create_Outside([Bind(Include = "IDVerifications,VerificationName")] Verification verification, string from, int id)
         {
             if (ModelState.IsValid)
             {
 
-                if (db.Verifications.Select(v => v.VerificationName == verification.VerificationName) != null)
+                if (db.Verifications.Where(v => v.VerificationName == verification.VerificationName).Count() != 0)
                 {
                     ModelState.AddModelError("name", "Verification '" + verification.VerificationName + "' already exists.");
+                    ViewBag.returnDestiny = from;
+                    ViewBag.returnDestinyCategory = id;
                     return View(verification);
                 }
+
 
                 var idUser = User.Identity.GetUserId();
                 var user = db.AdminBusinesses.Where(admB => admB.idUser.Id == idUser).First();
@@ -100,9 +104,9 @@ namespace TP_PWEB.Controllers
                 verification.Company = company;
                 db.Verifications.Add(verification);
                 db.SaveChanges();
-                if(from == "categories_verification")
+                if(from == "categories_verifications")
                 {
-                    return RedirectToAction("Create", "Categories_Verification");
+                    return RedirectToAction("Edit", "Categories_Verification", new {id = id});
                 }
                 else if(from == "vehicle")
                 {

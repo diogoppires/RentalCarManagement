@@ -14,7 +14,7 @@
     <div class="form-horizontal">
         <h4>Verification</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.VerificationName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -31,10 +31,10 @@
     </div>
 }
 
-@if (ViewBag.returnDestiny == "categories_verification")
+@if (ViewBag.returnDestiny == "categories_verifications")
 {
     <div>
-        @Html.ActionLink("Back to Creation", "Create", "Categories_Verification")
+        @Html.ActionLink("Back to List ca", "Edit", "Categories_Verification", new {id = ViewBag.returnDestinyCategory}, null)
     </div>
 }
 else if (ViewBag.returnDestiny == "vehicle")
