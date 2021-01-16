@@ -34,7 +34,7 @@
             @Html.LabelFor(model => model.Damages, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
-                    @Html.CheckBoxFor(model => model.Damages)
+                    @Html.EditorFor(model => model.Damages, new { htmlAttributes = new { @id = "teste" } })
                     @Html.ValidationMessageFor(model => model.Damages, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -65,12 +65,22 @@
     <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
     <script>
         $(function () {
-            if ($('#Damages').is(':checked')) {
-            $("#filechooser").css("visibility", "visible");
-        }
-        else {
-            $("#filechooser").css("visibility", "hidden");
-        }
-    });
+            if ($('#teste').prop('checked')) {
+                $("#filechooser").css("visibility", "visible");
+            }
+            else {
+                $("#filechooser").css("visibility", "hidden");
+            }
+        });
+        $(function () {
+            $('#teste').click((function () {
+                if ($('#teste').prop('checked')) {
+                    $("#filechooser").css("visibility", "visible");
+                }
+                else {
+                    $("#filechooser").css("visibility", "hidden");
+                }
+            }));
+        });
     </script>
 }
