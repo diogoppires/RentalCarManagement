@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -128,7 +129,10 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, int idCategory, VehicleAndVerifications tempModel)
+        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
+            int idCategory, 
+            VehicleAndVerifications tempModel,
+            HttpPostedFileBase singleFile)
         {
             if (ModelState.IsValid)
             {
@@ -154,9 +158,20 @@ namespace TP_PWEB.Views.Vehicles
                 vehicle.Company = company;
                 //Add Category
                 vehicle.idCategory = idCategory;
+
+                
                 //Add Vehicle to database
                 db.Vehicles.Add(vehicle);
                 //Save changes
+                db.SaveChanges();
+                string fileName = "Catalog_IMG_Vehicle_ID_" + vehicle.IDVehicle;
+                if (singleFile != null && singleFile.ContentLength > 0)
+                {
+                    fileName += Path.GetExtension(singleFile.FileName);
+                    singleFile.SaveAs(Path.Combine(Server.MapPath("~/images"), fileName));
+                    vehicle.Image = fileName;
+                }
+                db.Entry(vehicle).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -210,7 +225,10 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, VehicleAndVerifications modelVV, int idCategory)
+        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
+            VehicleAndVerifications modelVV, 
+            int idCategory,
+            HttpPostedFileBase singleFile)
         {
             if (ModelState.IsValid)
             {
@@ -238,6 +256,15 @@ namespace TP_PWEB.Views.Vehicles
                     }
                 }
                 vehicle.idCategory = idCategory;
+
+                string fileName = "Catalog_IMG_Vehicle_ID_" + vehicle.IDVehicle.ToString();
+                if (singleFile != null && singleFile.ContentLength > 0)
+                {
+                    fileName += Path.GetExtension(singleFile.FileName);
+                    singleFile.SaveAs(Path.Combine(Server.MapPath("~/images"), fileName));
+                    vehicle.Image = fileName;
+                }
+
                 db.Entry(vehicle).State = EntityState.Modified;
                 db.SaveChanges();
             }

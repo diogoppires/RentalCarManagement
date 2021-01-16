@@ -53,11 +53,11 @@
                     @using (Html.BeginForm())
                     {
                         <p>
-                            <img src="images/start_date.png"/>
+                            <img src="@Url.Content("~/images/start_date.png")"/>
                             @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
                         </p>
                         <p>
-                            <img src="images/end_date.png" />
+                            <img src="@Url.Content("~/images/end_date.png")" />
                             @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
                         </p>
                         <p>
@@ -83,7 +83,14 @@
                             <div class="courses-thumb courses-thumb-secondary">
                                 <div class="courses-top">
                                     <div class="courses-image">
-                                        <img src="images/product-1-720x480.jpg" class="img-responsive" alt="">
+                                        @if (item.Image == null)
+                                        {
+                                            <img src="@Url.Content("~/images/notfound.png")" class="img-responsive" alt="">
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/images/" + item.Image)" class="img-responsive" alt="">
+                                        }
                                     </div>
                                 </div>
 

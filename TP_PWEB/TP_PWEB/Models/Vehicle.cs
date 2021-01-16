@@ -16,6 +16,8 @@ namespace TP_PWEB.Models
         public float VehicleTank { get; set; }
         public bool Damages { get; set; }
         public double Price { get; set; }
+        [MaxLength(1000)]
+        public string Image { get; set; }
 
         public virtual Company Company { get; set; }
         public virtual Category Category { get; set; }
