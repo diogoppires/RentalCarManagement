@@ -35,24 +35,7 @@ namespace TP_PWEB
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var role = context.Roles.Find(id);
-            return View(role);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(IdentityRole Role)
-        {
-            context.Entry(Role).State = System.Data.Entity.EntityState.Modified;
-            context.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
+       
         public ActionResult Delete(string id)
         {
             var role = context.Roles.Find(id);

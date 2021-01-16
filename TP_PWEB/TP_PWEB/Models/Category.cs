@@ -10,6 +10,7 @@ namespace TP_PWEB.Models
     {
         [Key]
         public int idCategory { get; set; }
+        [Display(Name = "Category Name")]
         public string Name { get; set; }
         [Display(Name = "Category Visibility")]
         public bool isVisible { get; set; }

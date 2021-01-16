@@ -1,16 +1,5 @@
 Administrador da Plataforma
 
->>>MANAGE COMPANIES<<<
-- Melhorar a view do Details
-
->>>ALL USERS<<<
-- Deve ser possível alterar a Role? (Provavelmente não)
-- Redireções do edit e do details.
-
-
->>>Manage Vehicles Category<<<
-
 >>>Catalog<<<
-- Aparecer detalhes do veículo e (se houver tempo) colocar as reservas a que este veículo está associado (Tendo em conta a view que se vai adicionar)
-- Talvez procurar um barra de procura por ID do veículo (?)
+- Talvez procurar um barra de procura por matricula do veículo (?)
 

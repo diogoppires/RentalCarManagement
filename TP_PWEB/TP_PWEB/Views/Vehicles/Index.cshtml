@@ -182,13 +182,16 @@ else
                                 @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
                             </td>
 
-                            <td>
-                                @Html.ActionLink("Verification List", "VerificationList", new { id = item.IDVehicle }, null)
-                            </td>
-                        }
-                    }
-                </tr>
+    <td>
+        @{
+            if (User.IsInRole("Client"))
+            {
+                @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
             }
+        }
+
+    </td>
+</tr>
         }
     </table>
 }
