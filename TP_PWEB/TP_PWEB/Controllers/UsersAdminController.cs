@@ -155,7 +155,6 @@ namespace TP_PWEB
                 })
             });
         }
-
         //
         // POST: /Users/Edit/5
         [HttpPost]
@@ -255,8 +254,6 @@ namespace TP_PWEB
         {
             if (ModelState.IsValid)
             {
-                
-
                 if (id == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -285,7 +282,11 @@ namespace TP_PWEB
                     ModelState.AddModelError("", result.Errors.First());
                     return View();
                 }
-                
+
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("IndexClient");
+                }
                 return RedirectToAction("Index");
             }
             return View();

@@ -18,6 +18,9 @@
             @Html.DisplayNameFor(model => model.Model)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.licensePlate)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Company.Name)
         </th>
         <th></th>
@@ -27,20 +30,23 @@
     {
         if (item.Category.isVisible)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Company.Name)
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.licensePlate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company.Name)
+            </td>
+        </tr>
         }
     }
 </table>

@@ -68,6 +68,9 @@
             @Html.DisplayNameFor(model => model.Model)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.licensePlate)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.NumberKm)
         </th>
         <th>
@@ -86,57 +89,60 @@
     {
         if (item.Category.isVisible)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IDVehicle)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberKm)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VehicleTank)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Damages)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                @{
-                    if (User.IsInRole("Business"))
-                    {
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
-                        </td>
-
-                        <td>
-                            @Html.ActionLink("Verification List", "VerificationList", new { id = item.IDVehicle }, null)
-                        </td>
-                    }
-                }
-
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IDVehicle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.licensePlate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberKm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleTank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Damages)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+    @{
+        if (User.IsInRole("Business"))
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
+                @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
+            </td>
 
             <td>
-                @{
-                    if (User.IsInRole("Client"))
-                    {
-                        @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                    }
-                }
-
+                @Html.ActionLink("Verification List", "VerificationList", new { id = item.IDVehicle }, null)
             </td>
-            </tr>
+        }
+    }
+
+
+    <td>
+        @{
+            if (User.IsInRole("Client"))
+            {
+                @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+            }
+        }
+
+    </td>
+</tr>
         }
     }
 </table>
