@@ -175,6 +175,8 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Bookings/Create
+        
+        [Authorize]
         public ActionResult Create(int? id)
         {
             BookingsAndList bal = new BookingsAndList();

@@ -22,9 +22,23 @@ namespace TP_PWEB
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/template").Include(
+                    "~/Scripts/jquery.js",
+                    "~/Scripts/bootstrap.min.js",
+                    "~/Scripts/owl.carousel.min.js",
+                    "~/Scripts/smoothscroll.js",
+                    "~/Scripts/custom.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/bootstrap.min.css",
+                      "~/Content/bootstrap-theme.css",
+                      "~/Content/bootstrap-theme.min.css",
+                      "~/Content/Site.css",
+                      "~/Content/owl.carousel.css",
+                      "~/Content/owl.theme.default.min.css",
+                      "~/Content/style.css",
+                      "~/Content/font-awsome.min.css"));
         }
     }
 }
