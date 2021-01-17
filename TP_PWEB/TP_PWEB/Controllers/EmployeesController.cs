@@ -11,6 +11,7 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
 {
+    [Authorize(Roles = "Business")]
     public class EmployeesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

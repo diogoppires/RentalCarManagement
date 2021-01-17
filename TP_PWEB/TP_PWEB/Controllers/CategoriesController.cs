@@ -10,6 +10,7 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Views
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

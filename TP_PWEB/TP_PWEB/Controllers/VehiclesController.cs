@@ -114,6 +114,7 @@ namespace TP_PWEB.Views.Vehicles
             return View(vehicle);
         }
 
+        [Authorize(Roles = "Business")]
         // GET: Vehicles/Create
         public ActionResult Create()
         {
@@ -231,6 +232,7 @@ namespace TP_PWEB.Views.Vehicles
         }
 
         // GET: Vehicles/Edit/5
+        [Authorize(Roles = "Business")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -324,6 +326,7 @@ namespace TP_PWEB.Views.Vehicles
         }
 
         // GET: Vehicles/Delete/5
+        [Authorize(Roles = "Business")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

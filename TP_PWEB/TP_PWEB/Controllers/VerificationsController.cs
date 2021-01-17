@@ -11,6 +11,7 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
 {
+    [Authorize(Roles = "Business, Employee")]
     public class VerificationsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
