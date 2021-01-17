@@ -75,9 +75,15 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IDVehicle })
-</p>
+@if (!User.IsInRole("Client"))
+{
+    if (User.Identity.IsAuthenticated)
+    {
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.IDVehicle })
+        </p>
+    }
+}
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>
