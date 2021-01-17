@@ -252,6 +252,7 @@ namespace TP_PWEB.Controllers
             GetVerifications gV = new GetVerifications();
             Booking booking = db.Bookings.Find(id);
             IEnumerable<Vehicle_Verification> vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == booking.vehicle.IDVehicle);
+            ViewBag.allChecked = true;
             if (vehicles_Verifications.Count() == 0)
             {
                 IEnumerable<Categories_Verification> categories_Verifications = db.Categories_Verification
@@ -275,7 +276,6 @@ namespace TP_PWEB.Controllers
                 //Get category
                 Booking booking = db.Bookings.Find(id);
 
-
                 IEnumerable<Vehicle_Verification> vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == booking.vehicle.IDVehicle);
                 gV.vehVer = vehicles_Verifications.ToList();
                 if (vehicles_Verifications.Count() == 0)
@@ -285,6 +285,14 @@ namespace TP_PWEB.Controllers
                         .Where(v => v.IDCategory == booking.vehicle.idCategory && v.Company.IDCompany == booking.vehicle.Company.IDCompany)
                         .ToList();
                     gV.catVer = categories_Verifications.ToList();
+                }
+                for (int i = 0; i < gV.ChoosenVerifications.Count(); i++)
+                {
+                    if (!gV.ChoosenVerifications[i])
+                    {
+                        ViewBag.allChecked = false;
+                        return View(gV);
+                    }
                 }
 
                 if (gV.catVer != null)
@@ -314,7 +322,7 @@ namespace TP_PWEB.Controllers
                 }
                 
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("IndexCheckedOut");
             }
 
             return View(gV);

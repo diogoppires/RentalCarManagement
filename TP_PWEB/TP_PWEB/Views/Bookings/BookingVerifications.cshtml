@@ -9,39 +9,47 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        @if (Model.vehVer != null)
+<div class="form-horizontal">
+    @if (Model.vehVer != null)
+    {
+        <ol>
+            @for (int i = 0; i < Model.vehVer.Count(); i++)
+            {
+                var disp = Model.vehVer.ElementAt(i).Verification.VerificationName;
+                <li>
+                    @Html.DisplayFor(modelItem => disp, new { id = " allText " })
+                    @Html.EditorFor(model => Model.ChoosenVerifications[i])
+                </li>
+            }
+        </ol>
+    }
+    else
+    {
+        <ol>
+            @for (int i = 0; i < Model.catVer.Count(); i++)
+            {
+                var disp = Model.catVer.ElementAt(i).Verification.VerificationName;
+                <li>
+                    @Html.DisplayFor(modelItem => disp, new { id = " allText " })
+                    @Html.EditorFor(model => Model.ChoosenVerifications[i])
+                </li>
+            }
+        </ol>
+    }
+    @{
+        if (!ViewBag.allChecked)
         {
-            <ol>
-                @for (int i = 0; i < Model.vehVer.Count(); i++)
-                {
-                    var disp = Model.vehVer.ElementAt(i).Verification.VerificationName;
-                    <li>
-                        @Html.DisplayFor(modelItem => disp, new { id = " allText " })
-                        @Html.EditorFor(model => Model.ChoosenVerifications[i])
-                    </li>
-                }
-            </ol>
+            <p style="color:red;font-weight:bold">
+                Some verifications are not checked!
+            </p>
         }
-        else
-        {
-            <ol>
-                @for (int i = 0; i < Model.catVer.Count(); i++)
-                {
-                    var disp = Model.catVer.ElementAt(i).Verification.VerificationName;
-                    <li>
-                        @Html.DisplayFor(modelItem => disp, new { id = " allText " })
-                        @Html.EditorFor(model => Model.ChoosenVerifications[i])
-                    </li>
-                }
-            </ol>
-        }
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Finish Check-Out" class="btn btn-default" />
-            </div>
+    }
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Finish Check-Out" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 

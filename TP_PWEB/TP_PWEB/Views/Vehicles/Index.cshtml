@@ -173,25 +173,23 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
-                    @{
-                        if (User.IsInRole("Business"))
-                        {
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
-                                @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
-                            </td>
+                    @if (User.IsInRole("Business"))
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.IDVehicle }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.IDVehicle })
+                        </td>
 
-    <td>
-        @{
-            if (User.IsInRole("Client"))
-            {
-                @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                        <td>
+                            @if (User.IsInRole("Client"))
+                            {
+                                @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                            }
+                        </td>
+                    }
+                </tr>
             }
-        }
-
-    </td>
-</tr>
         }
     </table>
 }
