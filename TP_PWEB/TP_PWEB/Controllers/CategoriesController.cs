@@ -52,7 +52,7 @@ namespace TP_PWEB.Views
             if (ModelState.IsValid)
             {
 
-                if (db.Categories.Select(v => v.Name == category.Name) != null)
+                if (db.Categories.Where(v => v.Name == category.Name).Count() != 0)
                 {
                     ModelState.AddModelError("name", "Category '" + category.Name + "' already exists.");
                     return View(category);
@@ -90,7 +90,7 @@ namespace TP_PWEB.Views
         {
             if (ModelState.IsValid)
             {
-                if (db.Categories.Select(v => v.Name == category.Name) != null)
+                if (db.Categories.Where(v => v.Name == category.Name).Count() > 1)
                 {
                     ModelState.AddModelError("name", "Category '" + category.Name + "' already exists.");
                     return View(category);

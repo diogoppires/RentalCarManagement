@@ -131,7 +131,7 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
+        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,licensePlate,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
             int idCategory, 
             VehicleAndVerifications tempModel,
             HttpPostedFileBase singleFile)
@@ -148,7 +148,7 @@ namespace TP_PWEB.Views.Vehicles
                     ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
                     return View(tempModel);
                 }
-                if (db.Vehicles.Select(v => v.licensePlate == vehicle.licensePlate).First())
+                if (db.Vehicles.Where(v => v.licensePlate == vehicle.licensePlate).Count() != 0)
                 {
                     ModelState.AddModelError("licensePlate", "The licensePlate '" + vehicle.licensePlate + "' already exists.");
                     tempModel.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
@@ -260,7 +260,7 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
+        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,licensePlate,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
             VehicleAndVerifications modelVV, 
             int idCategory,
             HttpPostedFileBase singleFile)
@@ -278,7 +278,7 @@ namespace TP_PWEB.Views.Vehicles
                     ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
                     return View(modelVV);
                 }
-                if (db.Vehicles.Where(v => v.IDVehicle != vehicle.IDVehicle).Select(v => v.licensePlate == vehicle.licensePlate).First())
+                if (db.Vehicles.Where(v => v.licensePlate == vehicle.licensePlate).Count() > 1)
                 {
                     ModelState.AddModelError("licensePlate", "This licensePlate '" + vehicle.licensePlate + "' already exists.");
                     modelVV.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
