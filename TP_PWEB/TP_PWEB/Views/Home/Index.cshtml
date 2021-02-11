@@ -2,30 +2,186 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<section id="home">
+    <div class="row">
+        <div class="owl-carousel owl-theme home-slider">
+            <div class="item item-first">
+                <div class="caption">
+                    <div class="container">
+                        <div class="col-md-6 col-sm-12">
+                            <h1>e-Renting. Not the website we need but the website we deserve.</h1>
+                            <button class="section-btn btn btn-default">@Html.ActionLink("Catalog", "Index", "Vehicles")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            <div class="item item-second">
+                <div class="caption">
+                    <div class="container">
+                        <div class="col-md-6 col-sm-12">
+                            <h1>Why waste your time walking when you can have a car?</h1>
+                            <h3>Rent right now a vehicle and enjoy every kilometer everywhere you go.</h3>
+                            <button class="section-btn btn btn-default">@Html.ActionLink("Catalog", "Index", "Vehicles")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item item-third">
+                <div class="caption">
+                    <div class="container">
+                        <div class="col-md-6 col-sm-12">
+                            <h1>Need a lift?</h1>
+                            <h3>We have thousands of cars that you will like to see. So, take a look!</h3>
+                            <button class="section-btn btn btn-default">@Html.ActionLink("Catalog", "Index", "Vehicles")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+</section>
+
+<main>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="text-center">
+                        <h2>About us</h2>
+                        <br>
+                        <p class="lead"> We are two third year students from Instituto Superior de Engenharia de Coimbra and this website was done in order to do the project assigned for the subject of Web Programming. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonial">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12 col-sm-12">
+                    <div class="section-title text-center">
+                        <h2>Testimonials <small>from around the world</small></h2>
+                    </div>
+
+                    <div class="owl-carousel owl-theme owl-client">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="item">
+                                <div class="tst-image">
+                                    <img src="images/tst-image-1-200x216.jpg" class="img-responsive" alt="">
+                                </div>
+                                <div class="tst-author">
+                                    <h4>Jackson</h4>
+                                    <span>Shopify Developer</span>
+                                </div>
+                                <p>This renting company made such a good job that I already rented cars for the next two decades. It is a pleasure to see how this works.</p>
+                                <div class="tst-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="item">
+                                <div class="tst-image">
+                                    <img src="images/tst-image-2-200x216.jpg" class="img-responsive" alt="">
+                                </div>
+                                <div class="tst-author">
+                                    <h4>Camila</h4>
+                                    <span>Marketing Manager</span>
+                                </div>
+                                <p>Excellent service and people. If someone needs to rent a car, my advice is to rent it here. You won't regret it.</p>
+                                <div class="tst-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="item">
+                                <div class="tst-image">
+                                    <img src="images/tst-image-3-200x216.jpg" class="img-responsive" alt="">
+                                </div>
+                                <div class="tst-author">
+                                    <h4>Barbie</h4>
+                                    <span>Art Director</span>
+                                </div>
+                                <p>Needed a vehicle during two months and the service here was wonderful. Would rent another vehicle here again.</p>
+                                <div class="tst-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4">
+                            <div class="item">
+                                <div class="tst-image">
+                                    <img src="images/tst-image-4-200x216.jpg" class="img-responsive" alt="">
+                                </div>
+                                <div class="tst-author">
+                                    <h4>Andrio</h4>
+                                    <span>Web Developer</span>
+                                </div>
+                                <p>The best service available nowadays. The process is easy and it is very quickly to do all the things you need.</p>
+                                <div class="tst-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6 col-sm-12">
+                <form id="contact-form" role="form" action="" method="post">
+                    <div class="section-title">
+                        <h2>Contact us <small>we love conversations. let us talk!</small></h2>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12">
+                        <input type="text" class="form-control" placeholder="Enter full name" name="name" required>
+
+                        <input type="email" class="form-control" placeholder="Enter email address" name="email" required>
+
+                        <textarea class="form-control" rows="6" placeholder="Tell us about your message" name="message" required></textarea>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12">
+                        <input type="submit" class="form-control" name="send message" value="Send Message">
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="contact-image">
+                    <img src="images/contact-1-600x400.jpg" class="img-responsive" alt="Smiling Two Girls">
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+</section>

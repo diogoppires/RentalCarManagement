@@ -36,6 +36,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.licensePlate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.licensePlate)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.NumberKm)
         </dt>
 
@@ -82,7 +90,7 @@
         else
         {
             <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default"/>
+                <input type="submit" value="Delete" class="section-btn btn btn-primary"/>
             </div>   
         }
         @Html.ActionLink("Back to List", "Index")

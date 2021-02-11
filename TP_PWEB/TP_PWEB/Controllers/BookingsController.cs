@@ -103,16 +103,7 @@ namespace TP_PWEB.Controllers
                 db.Entry(booking).State = EntityState.Modified;
                 db.SaveChanges();
             }
-            return RedirectToAction("IndexCheckedOut");
-        }
-
-        public ActionResult CheckedOut(int id)
-        {
-            //var booking = db.Bookings.Find(id);
-            //booking.state = States.CHECKED_OUT;
-            //db.Entry(booking).State = EntityState.Modified;
-            //db.SaveChanges();
-            return RedirectToAction("CreateCheckedOut", new { id = id });
+            return RedirectToAction("IndexCheckedIn");
         }
 
         // GET: Bookings/Details/5
@@ -146,8 +137,8 @@ namespace TP_PWEB.Controllers
 
         private HashSet<Booking> getFilteredBookings(DateTime initDate, DateTime endDate, int idVehicle)
         {
-            var filteredBookingsInit = db.Bookings.Where(b => ((DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
-            var filteredBookingsEnd = db.Bookings.Where(b => ((DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookingsInit = db.Bookings.Where(b => (b.state != States.CHECKED_OUT && (DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookingsEnd = db.Bookings.Where(b => (b.state != States.CHECKED_OUT && (DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
             var filteredBookings = filteredBookingsInit.Concat(filteredBookingsEnd).ToList();
             var uniqueBookings = new HashSet<Booking>(filteredBookings);
             return uniqueBookings;
@@ -155,8 +146,8 @@ namespace TP_PWEB.Controllers
 
         private HashSet<Booking> getFilteredBookings_Edit(DateTime initDate, DateTime endDate, int idVehicle, int idBooking)
         {
-            var filteredBookingsInit = db.Bookings.Where(b => (b.idBooking != idBooking && (DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
-            var filteredBookingsEnd = db.Bookings.Where(b => (b.idBooking != idBooking && (DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookingsInit = db.Bookings.Where(b => (b.state != States.CHECKED_OUT && b.idBooking != idBooking && (DateTime.Compare(initDate, b.bookingInit) >= 0) && (DateTime.Compare(initDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
+            var filteredBookingsEnd = db.Bookings.Where(b => (b.state != States.CHECKED_OUT && b.idBooking != idBooking && (DateTime.Compare(endDate, b.bookingInit) >= 0) && (DateTime.Compare(endDate, b.bookingEnd) <= 0)) && b.vehicle.IDVehicle == idVehicle);
             var filteredBookings = filteredBookingsInit.Concat(filteredBookingsEnd).ToList();
             var uniqueBookings = new HashSet<Booking>(filteredBookings);
             return uniqueBookings;
@@ -175,6 +166,8 @@ namespace TP_PWEB.Controllers
         }
 
         // GET: Bookings/Create
+        
+        [Authorize]
         public ActionResult Create(int? id)
         {
             BookingsAndList bal = new BookingsAndList();
@@ -213,12 +206,12 @@ namespace TP_PWEB.Controllers
         }
 
 
-        private void updateVehicle(Booking booking, CheckedOut ck_out)
+        private void updateVehicle(CheckedOut ck_out)
         {
-            booking.vehicle.NumberKm += ck_out.FinalKm;
-            booking.vehicle.VehicleTank = ck_out.FinalTankStatus;
-            booking.vehicle.Damages = ck_out.Damages;
-            db.Entry(booking.vehicle).State = EntityState.Modified;
+            ck_out.Booking.vehicle.NumberKm += ck_out.FinalKm;
+            ck_out.Booking.vehicle.VehicleTank = ck_out.FinalTankStatus;
+            ck_out.Booking.vehicle.Damages = ck_out.Damages;
+            db.Entry(ck_out.Booking.vehicle).State = EntityState.Modified;
         }
 
         // GET: Bookings/Create
@@ -238,6 +231,8 @@ namespace TP_PWEB.Controllers
             if (ModelState.IsValid)
             {
                 ck_out.Booking = db.Bookings.Find(id);
+                updateVehicle(ck_out);
+                ck_out.Booking.state = States.CHECKED_OUT;
                 db.CheckedOuts.Add(ck_out);
                 db.SaveChanges();
                 foreach (var file in files)
@@ -257,6 +252,7 @@ namespace TP_PWEB.Controllers
             GetVerifications gV = new GetVerifications();
             Booking booking = db.Bookings.Find(id);
             IEnumerable<Vehicle_Verification> vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == booking.vehicle.IDVehicle);
+            ViewBag.allChecked = true;
             if (vehicles_Verifications.Count() == 0)
             {
                 IEnumerable<Categories_Verification> categories_Verifications = db.Categories_Verification
@@ -280,7 +276,6 @@ namespace TP_PWEB.Controllers
                 //Get category
                 Booking booking = db.Bookings.Find(id);
 
-
                 IEnumerable<Vehicle_Verification> vehicles_Verifications = db.Vehicles_Verifications.Include(v => v.Vehicle).Where(v => v.IDVehicle == booking.vehicle.IDVehicle);
                 gV.vehVer = vehicles_Verifications.ToList();
                 if (vehicles_Verifications.Count() == 0)
@@ -290,6 +285,14 @@ namespace TP_PWEB.Controllers
                         .Where(v => v.IDCategory == booking.vehicle.idCategory && v.Company.IDCompany == booking.vehicle.Company.IDCompany)
                         .ToList();
                     gV.catVer = categories_Verifications.ToList();
+                }
+                for (int i = 0; i < gV.ChoosenVerifications.Count(); i++)
+                {
+                    if (!gV.ChoosenVerifications[i])
+                    {
+                        ViewBag.allChecked = false;
+                        return View(gV);
+                    }
                 }
 
                 if (gV.catVer != null)
@@ -319,7 +322,7 @@ namespace TP_PWEB.Controllers
                 }
                 
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("IndexCheckedOut");
             }
 
             return View(gV);

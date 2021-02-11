@@ -10,6 +10,8 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
 {
+    [Authorize(Roles = "Business")]
+
     public class Vehicle_VerificationController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

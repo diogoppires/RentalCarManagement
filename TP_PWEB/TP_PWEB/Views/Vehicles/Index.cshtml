@@ -15,26 +15,6 @@
     }
 }
 
-
-@{
-    //Users logged as clients or non logged can search for dates.
-    if (User.IsInRole("Client") || !User.Identity.IsAuthenticated)
-    {
-        <h2>Available Vehicles</h2>
-        using (Html.BeginForm())
-        {
-            <p>
-                Initial Date: @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
-                Ending Date: @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
-                <input type="submit" value="Search" />
-                <input type="reset" value="Clear Dates" />
-            </p>
-        }
-    }
-
-}
-
-
 @{
     if (ViewBag.invalidDates != null)
     {
@@ -53,66 +33,147 @@
     }
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.IDVehicle)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Brand)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Model)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumberKm)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.VehicleTank)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Damages)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th></th>
-    </tr>
+@if (User.IsInRole("Client") || !User.Identity.IsAuthenticated)
+{
+    <section>
+        <div class="container">
+            <div class="text-center">
+                <h1>Catalog</h1>
 
-    @foreach (var item in Model)
-    {
-        if (item.Category.isVisible)
+                <br>
+
+                <p class="lead">Here you see. Here you do. Here you rent.</p>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="container">
+                <div class="text-center">
+                    @using (Html.BeginForm())
+                    {
+                        <p>
+                            <img src="@Url.Content("~/images/start_date.png")"/>
+                            @Html.TextBox("initDate", null, new { @class = "datepicker", @readonly = "readonly" })
+                        </p>
+                        <p>
+                            <img src="@Url.Content("~/images/end_date.png")" />
+                            @Html.TextBox("endDate", null, new { @class = "datepicker", @readonly = "readonly" })
+                        </p>
+                        <p>
+                            <input type="submit" value="Search" class="section-btn btn btn-primary" />
+                        </p>
+                        <p>
+                            <input type="reset" value="Clear Dates" class="section-btn btn btn-primary"/>
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-background">
+        <div class="container">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    if (item.Category.isVisible)
+                    {
+                        <div class="col-md-4 col-sm-4">
+                            <div class="courses-thumb courses-thumb-secondary">
+                                <div class="courses-top">
+                                    <div class="courses-image">
+                                        @if (item.Image == null)
+                                        {
+                                            <img src="@Url.Content("~/images/notfound.png")" class="img-responsive" alt="">
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/images/" + item.Image)" class="img-responsive" alt="">
+                                        }
+                                    </div>
+                                </div>
+
+
+
+                                <div class="courses-detail">
+                                    <h3><a>@Html.ActionLink(item.Category.Name + " : " + item.Model.ToString(), "Details", "Vehicles", new { id = item.IDVehicle }, null)</a></h3>
+                                    <p class="lead"><small>from</small> <strong>@item.Price€</strong> <small>per day</small></p>
+                                    <p><strong>Brand: @item.Brand</strong></p>
+                                </div>
+
+                                <div class="courses-info">
+                                    <button type="button" class="section-btn btn btn-primary btn-block">@Html.ActionLink("Book now", "Create", "Bookings", new { id = item.IDVehicle }, null)</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IDVehicle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberKm)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleTank)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Damages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IDVehicle)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberKm)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VehicleTank)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Damages)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                @{
-                    if (User.IsInRole("Business"))
+            if (item.Category.isVisible)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IDVehicle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumberKm)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VehicleTank)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Damages)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    @if (User.IsInRole("Business"))
                     {
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { id = item.IDVehicle }) |
@@ -121,25 +182,18 @@
                         </td>
 
                         <td>
-                            @Html.ActionLink("Verification List", "VerificationList", new { id = item.IDVehicle }, null)
+                            @if (User.IsInRole("Client"))
+                            {
+                                @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
+                            }
                         </td>
                     }
-                }
-
-
-            <td>
-                @{
-                    if (User.IsInRole("Client"))
-                    {
-                        @Html.ActionLink("Book this vehicle", "Create", "Bookings", new { id = item.IDVehicle }, new { @style = " color: Black !important;", @class = "btn btn-default" })
-                    }
-                }
-
-            </td>
-            </tr>
+                </tr>
+            }
         }
-    }
-</table>
+    </table>
+}
+
 
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 @section Scripts{

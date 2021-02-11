@@ -11,6 +11,8 @@ using TP_PWEB.Models;
 
 namespace TP_PWEB.Controllers
 {
+
+    [Authorize(Roles = "Business")]
     public class Categories_VerificationController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

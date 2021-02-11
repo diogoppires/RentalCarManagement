@@ -1,8 +1,0 @@
-Cliente
-
->>>Catálogo<<<
-- Ver como vai ficar o layout que vamos utilizar
-
->>>My Bookings<<<
-- Edit do Bookings não funciona em condições (não faz validação de datas que já tenham reservam nem de datas inválidas).
-

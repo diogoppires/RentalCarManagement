@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "VerificationList";
-    
+
 }
 
 <h2>Verification List - @ViewBag.CarNameAndID</h2>
@@ -13,12 +13,6 @@
         {
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.vehVer.First().IDVehicle)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.vehVer.First().Vehicle.Brand)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.vehVer.First().Verification)
                 </th>
                 <th></th>
@@ -28,25 +22,14 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Vehicle.IDVehicle)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Vehicle.Brand)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Verification.VerificationName)
                     </td>
                 </tr>
             }
+
         }
         else
         {
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.catVer.First().Category.Name)
-                </th>
-                <th></th>
-            </tr>
 
             foreach (var item in Model.catVer)
             {
@@ -56,6 +39,10 @@
                     </td>
                 </tr>
             }
+
         }
+
     }
 </table>
+
+@Html.ActionLink("Back to List", "Index")

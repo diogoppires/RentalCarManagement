@@ -29,37 +29,38 @@
                 @Html.DisplayFor(modelItem => item.idUser.UserName)
             </dd>
         }
-
+    </dl>
+    <dl class="dl-horizontal">
         <dt>
-            Number of Pending Bookings:
+            Pending Bookings:
         </dt>
         <dd>
             @Html.DisplayFor(modelItem => modelItem.num_pendingBookings)
         </dd>
 
         <dt>
-            Number of Approved Bookings:
+            Approved Bookings:
         </dt>
         <dd>
             @Html.DisplayFor(modelItem => modelItem.num_approvedBookings)
         </dd>
 
         <dt>
-            Number of Checked-In Bookings:
+            Checked-In Bookings:
         </dt>
         <dd>
             @Html.DisplayFor(modelItem => modelItem.num_checkedInBookings)
         </dd>
 
         <dt>
-            Number of Checked-Out Bookings:
+            Checked-Out Bookings:
         </dt>
         <dd>
             @Html.DisplayFor(modelItem => modelItem.num_checkedOutBookings)
         </dd>
-
+        <hr />
         <dt>
-            Number of vehicles associated to this company:
+            Number of vehicles:
         </dt>
         <dd>
             @Html.DisplayFor(modelItem => modelItem.num_vehicles)

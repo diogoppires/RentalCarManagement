@@ -16,14 +16,17 @@ namespace TP_PWEB.Models
     public class Booking
     {
         [Key]
+        [Display(Name = "Booking Id")]
         public int idBooking { get; set; }
-        [Display(Name = "Initial Date Booking")]
+        [Display(Name = "Check_In Date")]
         [DataType(DataType.Date)]
         public DateTime bookingInit { get; set; }
+        [Display(Name = "State")]
         public States state { get; set; }
-        [Display(Name = "Final Date Booking")]
+        [Display(Name = "Check_Out Date")]
         [DataType(DataType.Date)]
         public DateTime bookingEnd { get; set; }
+
         public virtual Vehicle vehicle { get; set; }
         public virtual ApplicationUser User { get; set; }
     }

@@ -59,17 +59,22 @@
                         @Html.DisplayFor(modelItem => item.state)
                     </td>
                     <td>
-                        @Html.ActionLink("More", "Details", new { id = item.idBooking }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.idBooking })
+                        @Html.ActionLink("More", "Details", new { id = item.idBooking })
                     </td>
+                    @if (item.state != TP_PWEB.Models.States.CHECKED_IN && item.state != TP_PWEB.Models.States.CHECKED_OUT)
+                    {
+                        <td>
+                            @Html.ActionLink("Delete", "Delete", new { id = item.idBooking })
+                        </td>
+                    }
                     <td>
                         @if (item.state == TP_PWEB.Models.States.PENDING && item.vehicle != null)
                         {
-                            @Html.ActionLink("Edit Booking", "Edit", new { id = item.idBooking }) 
+                            @Html.ActionLink("Edit Booking", "Edit", new { id = item.idBooking })
                         }
                     </td>
                 </tr>
-            }
+                }
         </table>
     }
     else if (User.IsInRole("Employee"))

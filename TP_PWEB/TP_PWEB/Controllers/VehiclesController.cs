@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using TP_PWEB.Models;
@@ -112,6 +114,7 @@ namespace TP_PWEB.Views.Vehicles
             return View(vehicle);
         }
 
+        [Authorize(Roles = "Business")]
         // GET: Vehicles/Create
         public ActionResult Create()
         {
@@ -128,11 +131,33 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, int idCategory, VehicleAndVerifications tempModel)
+        public ActionResult Create([Bind(Include = "IDVehicle,Brand,Model,licensePlate,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
+            int idCategory, 
+            VehicleAndVerifications tempModel,
+            HttpPostedFileBase singleFile)
         {
             if (ModelState.IsValid)
             {
                 var company = getThisUserCompany();
+                if (!checkLicensePlateFormat(vehicle.licensePlate))
+                {
+                    ModelState.AddModelError("licensePlate", "The licensePlate '" + vehicle.licensePlate + "' is invalid (use one of this format 'AA-00-AA','AA-AA-00','00-AA-AA')");
+                    tempModel.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
+                    tempModel.ChoosenVerifications = new bool[tempModel.ListOfVerifications.Count()];
+                    tempModel.vehicle = vehicle;
+                    ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
+                    return View(tempModel);
+                }
+                if (db.Vehicles.Where(v => v.licensePlate == vehicle.licensePlate).Count() != 0)
+                {
+                    ModelState.AddModelError("licensePlate", "The licensePlate '" + vehicle.licensePlate + "' already exists.");
+                    tempModel.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
+                    tempModel.ChoosenVerifications = new bool[tempModel.ListOfVerifications.Count()];
+                    tempModel.vehicle = vehicle;
+                    ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
+                    return View(tempModel);
+                }
+               
 
                 //Add Verifications
                 var allVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany).ToList();
@@ -154,14 +179,38 @@ namespace TP_PWEB.Views.Vehicles
                 vehicle.Company = company;
                 //Add Category
                 vehicle.idCategory = idCategory;
+
+                
                 //Add Vehicle to database
                 db.Vehicles.Add(vehicle);
                 //Save changes
+                db.SaveChanges();
+                string fileName = "Catalog_IMG_Vehicle_ID_" + vehicle.IDVehicle;
+                if (singleFile != null && singleFile.ContentLength > 0)
+                {
+                    fileName += Path.GetExtension(singleFile.FileName);
+                    singleFile.SaveAs(Path.Combine(Server.MapPath("~/images"), fileName));
+                    vehicle.Image = fileName;
+                }
+                db.Entry(vehicle).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name", vehicle.idCategory);
             return View(vehicle);
+        }
+
+        private bool checkLicensePlateFormat(string licensePlate)
+        {
+            Regex r1 = new Regex("^[A-Z]{2}-[0-9]{2}-[A-Z]{2}$");
+            Regex r2 = new Regex("^[0-9]{2}-[A-Z]{2}-[A-Z]{2}$");
+            Regex r3 = new Regex("^[A-Z]{2}-[A-Z]{2}-[0-9]{2}$");
+
+            if (r1.IsMatch(licensePlate) || r2.IsMatch(licensePlate) || r3.IsMatch(licensePlate))
+            {
+                return true;
+            }
+            return false;
         }
 
         private bool[] getListVerifications(int? id)
@@ -183,6 +232,7 @@ namespace TP_PWEB.Views.Vehicles
         }
 
         // GET: Vehicles/Edit/5
+        [Authorize(Roles = "Business")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -210,11 +260,33 @@ namespace TP_PWEB.Views.Vehicles
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, VehicleAndVerifications modelVV, int idCategory)
+        public ActionResult Edit([Bind(Include = "IDVehicle,Brand,Model,licensePlate,NumberKm,VehicleTank,Damages,Price")] Vehicle vehicle, 
+            VehicleAndVerifications modelVV, 
+            int idCategory,
+            HttpPostedFileBase singleFile)
         {
             if (ModelState.IsValid)
             {
                 Company company = getThisUserCompany();
+
+                if (!checkLicensePlateFormat(vehicle.licensePlate))
+                {
+                    ModelState.AddModelError("licensePlate", "This licensePlate '" + vehicle.licensePlate + "' is invalid (use one of this format 'AA-00-AA','AA-AA-00','00-AA-AA')");
+                    modelVV.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
+                    modelVV.ChoosenVerifications = new bool[modelVV.ListOfVerifications.Count()];
+                    modelVV.vehicle = vehicle;
+                    ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
+                    return View(modelVV);
+                }
+                if (db.Vehicles.Where(v => v.licensePlate == vehicle.licensePlate).Count() > 1)
+                {
+                    ModelState.AddModelError("licensePlate", "This licensePlate '" + vehicle.licensePlate + "' already exists.");
+                    modelVV.ListOfVerifications = db.Verifications.Where(v => v.Company.IDCompany == company.IDCompany);
+                    modelVV.ChoosenVerifications = new bool[modelVV.ListOfVerifications.Count()];
+                    modelVV.vehicle = vehicle;
+                    ViewBag.idCategory = new SelectList(db.Categories, "idCategory", "Name");
+                    return View(modelVV);
+                }
                 var allVeh = db.Vehicles_Verifications.Where(s => s.IDVehicle == vehicle.IDVehicle && s.Company.IDCompany == company.IDCompany);
                 foreach (var item in allVeh)
                 {
@@ -238,6 +310,15 @@ namespace TP_PWEB.Views.Vehicles
                     }
                 }
                 vehicle.idCategory = idCategory;
+
+                string fileName = "Catalog_IMG_Vehicle_ID_" + vehicle.IDVehicle.ToString();
+                if (singleFile != null && singleFile.ContentLength > 0)
+                {
+                    fileName += Path.GetExtension(singleFile.FileName);
+                    singleFile.SaveAs(Path.Combine(Server.MapPath("~/images"), fileName));
+                    vehicle.Image = fileName;
+                }
+
                 db.Entry(vehicle).State = EntityState.Modified;
                 db.SaveChanges();
             }
@@ -245,6 +326,7 @@ namespace TP_PWEB.Views.Vehicles
         }
 
         // GET: Vehicles/Delete/5
+        [Authorize(Roles = "Business")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -300,7 +382,7 @@ namespace TP_PWEB.Views.Vehicles
             {
                 vL.vehVer = vehicles_Verification.ToList();
             }
-            ViewBag.CarNameAndID = string.Format("{0} {1} (ID: {2})", vehicle.Brand, vehicle.Model, vehicle.IDVehicle);
+            ViewBag.CarNameAndID = string.Format("{0} {1} | {2} (ID: {3})", vehicle.Brand, vehicle.Model, vehicle.licensePlate, vehicle.IDVehicle);
             return View(vL);
         }
 

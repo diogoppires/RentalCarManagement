@@ -9,28 +9,29 @@
 <div>
     <hr />
     <dl class="dl-horizontal">
-        <dt>Booking Id</dt>
+        <dt>@Html.DisplayNameFor(model => model.idBooking)</dt>
         <dd>@Html.DisplayFor(model => model.idBooking)</dd>
-        <dt>Check_In Date</dt>
+        <dt>@Html.DisplayNameFor(model => model.bookingInit)</dt>
         <dd>@Html.DisplayFor(model => model.bookingInit)</dd>
-        <dt>Check_Out</dt>
+        <dt>@Html.DisplayNameFor(model => model.bookingEnd)</dt>
         <dd>@Html.DisplayFor(model => model.bookingEnd)</dd>
-        <dt>State</dt>
+        <dt>@Html.DisplayNameFor(model => model.state)</dt>
         <dd>@Html.DisplayFor(model => model.state)</dd>
     </dl>
 
     <hr />
     <h4>Vehicle</h4>
     <dl class="dl-horizontal">
-        <dt>Brand</dt>
+        <dt>@Html.DisplayNameFor(model => model.vehicle.Brand)</dt>
         <dd>@Html.DisplayFor(model => model.vehicle.Brand)</dd>
-        <dt>Model</dt>
+        <dt>@Html.DisplayNameFor(model => model.vehicle.Model)</dt>
         <dd>@Html.DisplayFor(model => model.vehicle.Model)</dd>
-        <dt>Price</dt>
+        <dt>@Html.DisplayNameFor(model => model.vehicle.licensePlate)</dt>
+        <dd>@Html.DisplayFor(model => model.vehicle.licensePlate)</dd>
+        <dt>@Html.DisplayNameFor(model => model.vehicle.Price)</dt>
         <dd>@Html.DisplayFor(model => model.vehicle.Price) €</dd>
-        <dt>Company</dt>
+        <dt>@Html.DisplayNameFor(model => model.vehicle.Company.Name)</dt>
         <dd>@Html.DisplayFor(model => model.vehicle.Company.Name)</dd>
-
     </dl>
 </div>
 <p>
